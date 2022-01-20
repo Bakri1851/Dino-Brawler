@@ -1,12 +1,9 @@
 import pygame
 from player import *
 
-pygame.init()
-pygame.display.set_mode((1250, 700)) # Size of window
-
 
 class SpriteSheet():
-    def __init__(self,image):
+    def __init__(self, image):
         self.sheet = image
 
     def get_image(self, frame, width, height, scale, colour):
