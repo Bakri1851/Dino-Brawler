@@ -1,4 +1,6 @@
 # import spritesheet
+import pygame.time
+
 import world
 from pygame.locals import *
 from world import *
@@ -29,9 +31,17 @@ class Player():
         self.health_y = health_y
         self.keys = pygame.key.get_pressed()
         self.action = 0
+        self.frame = 0
+        self.last_update = pygame.time.get_ticks()
 
-    def draw_character(self, win):
-        pygame.draw.rect(win, self.color, self.rect)
+    def draw_character(self, win, last_update, animation_list):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_update >= 125:
+            self.frame += 1
+            self.last_update = current_time
+            if self.frame >= len(animation_list[self.action]):
+                self.frame = 0
+        win.blit(animation_list[self.action][self.frame], (self.x - 10, self.y - 10))
 
     def get_damage(self, amount):
         if self.current_health > 0:
@@ -60,40 +70,42 @@ class Player():
 
         if self.keys[pygame.K_a] or self.keys[pygame.K_LEFT]:
             dx -= 5
+            self.frame = 0
 
         if self.keys[pygame.K_d] or self.keys[pygame.K_RIGHT]:
             dx += 5
             self.action = 1
+            self.frame = 0
 
         if (self.keys[pygame.K_w] or self.keys[pygame.K_UP]) and self.jumped == False:
             self.vel_y = -15
             self.jumped = True
             self.action = 7
+            self.frame = 0
 
         if not (self.keys[pygame.K_w] or self.keys[pygame.K_UP]):
             self.jumped = False
 
-        #if self.keys[pygame.K_s] or self.keys[pygame.K_DOWN]:
+        # if self.keys[pygame.K_s] or self.keys[pygame.K_DOWN]:
         #    dy += 5
 
         if self.keys[pygame.K_j]:
             self.action = 2
+            self.frame = 0
 
         if self.keys[pygame.K_k]:
             self.action = 5
-        '''
-        if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_j]:
-            player.get_damage(50)
-            self.action = 2
-            #player2.action = 3
-        '''
+            self.frame = 0
+
         if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_j]:
             player.get_damage(50)
             player.action = 3
+            self.frame = 0
 
         if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_k]:
             player.get_damage(100)
             player.action = 3
+            self.frame = 0
 
         # this is the gravity
         self.vel_y += 1
@@ -125,5 +137,4 @@ class Player():
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.display_health()
-        #pygame.draw.rect(win, (255, 255, 255), self.rect, 2)
-
+        # pygame.draw.rect(win, (255, 255, 255), self.rect, 2)
