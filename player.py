@@ -15,6 +15,7 @@ p2 = 0
 
 class Player():
     def __init__(self, x, y, width, height, color, health, health_x, health_y):
+        self.ready = False
         self.x = x
         self.y = y
         self.width = width
@@ -33,6 +34,9 @@ class Player():
         self.action = 0
         self.frame = 0
         self.last_update = pygame.time.get_ticks()
+
+    def connected(self):
+        return self.ready
 
     def draw_character(self, win, animation_list):
         current_time = pygame.time.get_ticks()

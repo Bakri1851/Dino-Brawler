@@ -80,11 +80,16 @@ def main():
     n = Network()  # when we connect we will get the player starting position
     player = n.getP()
 
+    print("You are player", player)
+
     while run:
         clock.tick(60)
-        player2 = n.send(player)
-
-        print("f", player.frame)
+        try:
+            player2 = n.send(player)
+        except:
+            run = False
+            print("Couldn't get game")
+            break
 
         for event in pygame.event.get():
 
@@ -99,7 +104,7 @@ def main():
             if player2.current_health <= 0:
                 winner_screen()
                 run = False
-
+            redrawWindow(win, player, player2)
         player.move()
         player.attack(player, player2)
         redrawWindow(win, player, player2)
@@ -107,7 +112,14 @@ def main():
 
 def redrawWindow(win, player, player2):
     win.fill((0, 0, 0))
-
+    '''
+    if not (player2.connected()):
+        font = pygame.font.SysFont("comicsans", 80)
+        text = font.render("Waiting for Player...", False, (255, 0, 0), True)
+        win.blit(text, (width / 2 - text.get_width() / 2, height / 2 - text.get_height() / 2))
+    else:
+    '''
+    win.fill((0, 0, 0))
     # draws background onto the screen
     # win.blit(bg_img, (0, 0))
 
