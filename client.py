@@ -73,8 +73,6 @@ def menu_screen():
 
 
 def main():
-    last_update = pygame.time.get_ticks()
-
     run = True  # initiates while loop
 
     clock = pygame.time.Clock()
@@ -102,19 +100,12 @@ def main():
                 winner_screen()
                 run = False
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    player.get_health(50)
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    player.get_damage(200)
-
         player.move(player, player2)
-        redrawWindow(win, player, player2, last_update)
+        player.attack(player, player2)
+        redrawWindow(win, player, player2)
 
 
-def redrawWindow(win, player, player2, last_update):
+def redrawWindow(win, player, player2):
     win.fill((0, 0, 0))
 
     # draws background onto the screen
@@ -123,16 +114,13 @@ def redrawWindow(win, player, player2, last_update):
     # draws my tiles onto the screen
     world.draw()
 
-    # win.blit(animation_list[player.action][frame], (player.x - 10, player.y - 10))
-    # win.blit(animation_list[player2.action][frame2], (player2.x - 10, player2.y - 10))
-
     # draws grid onto the screen
     # draw_grid()
 
     # draws player characters onto the screen
 
-    player.draw_character(win, last_update, animation_list)
-    player2.draw_character(win, last_update, animation_list)
+    player.draw_character(win, animation_list)
+    player2.draw_character(win, animation_list)
 
     player.display_health()
     player2.display_health()

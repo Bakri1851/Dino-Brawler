@@ -35,18 +35,18 @@ def run_server(my_server, my_port, s):
     except socket.error as e:
         str(e)
 
-    def threaded_cilent(my_conn, player):  # conn = connection
+    def threaded_client(my_conn, player):  # conn = connection
         my_conn.send(pickle.dumps(players[player]))  # this will convert to string and send it to the player
         reply = ""
         while True:
             try:
                 data = pickle.loads(my_conn.recv(
-                    2048))  # 2048 is the amount of information we are trying to recieve. The larger the size the longer it takes to recieve info
+                    2048))
                 players[player] = data
 
                 if not data:
                     print("Disconnected")
-                    break  # if we dont get info from the cilent we will disconnect this will mean the cilent has left. This will allow no infinite loops
+                    break
                 else:
                     if player == 1:
                         reply = players[0]
@@ -69,7 +69,7 @@ def run_server(my_server, my_port, s):
         conn, addr = s.accept()
         print("Connected to:", addr)
 
-        start_new_thread(threaded_cilent, (conn, currentPlayer))
+        start_new_thread(threaded_client, (conn, currentPlayer))
         currentPlayer += 1
 
 

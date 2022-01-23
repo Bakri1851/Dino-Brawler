@@ -34,7 +34,7 @@ class Player():
         self.frame = 0
         self.last_update = pygame.time.get_ticks()
 
-    def draw_character(self, win, last_update, animation_list):
+    def draw_character(self, win, animation_list):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_update >= 125:
             self.frame += 1
@@ -67,7 +67,6 @@ class Player():
 
         # get key presses
         self.keys = pygame.key.get_pressed()
-
         if self.keys[pygame.K_a] or self.keys[pygame.K_LEFT]:
             dx -= 5
             self.frame = 0
@@ -85,27 +84,6 @@ class Player():
 
         if not (self.keys[pygame.K_w] or self.keys[pygame.K_UP]):
             self.jumped = False
-
-        # if self.keys[pygame.K_s] or self.keys[pygame.K_DOWN]:
-        #    dy += 5
-
-        if self.keys[pygame.K_j]:
-            self.action = 2
-            self.frame = 0
-
-        if self.keys[pygame.K_k]:
-            self.action = 5
-            self.frame = 0
-
-        if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_j]:
-            player.get_damage(50)
-            player.action = 3
-            self.frame = 0
-
-        if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_k]:
-            player.get_damage(100)
-            player.action = 3
-            self.frame = 0
 
         # this is the gravity
         self.vel_y += 1
@@ -133,6 +111,26 @@ class Player():
         self.y += dy
 
         self.update()
+
+    def attack(self, player, player2):
+
+        if self.keys[pygame.K_j]:
+            self.action = 2
+            self.frame = 0
+
+        if self.keys[pygame.K_k]:
+            self.action = 5
+            self.frame = 0
+
+        if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_j]:
+            player.get_damage(50)
+            player.action = 3
+            self.frame = 0
+
+        if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_k]:
+            player.get_damage(100)
+            player.action = 3
+            self.frame = 0
 
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
