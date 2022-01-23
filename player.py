@@ -60,7 +60,7 @@ class Player():
         pygame.draw.rect(win, (255, 255, 255), (self.health_x, self.health_y, self.health_bar_length, 15), 5)
         # if want health bar above player swap health.x with x - 30 and health.y with y - 30
 
-    def move(self, player, player2):
+    def move(self):
         dx = 0
         dy = 0
         self.action = 0

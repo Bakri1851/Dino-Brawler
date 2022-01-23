@@ -100,7 +100,7 @@ def main():
                 winner_screen()
                 run = False
 
-        player.move(player, player2)
+        player.move()
         player.attack(player, player2)
         redrawWindow(win, player, player2)
 
