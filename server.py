@@ -1,6 +1,6 @@
 import socket
-from _thread import *
-from player import *
+from _thread import start_new_thread
+from player import Player
 import pickle
 import sys
 
@@ -10,8 +10,8 @@ port = 5555  # this is the port I will use for the connections
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket I will use for final product
 
-player1 = Player(400, 350, 48, 48, (255, 0, 0), 10000, 100, 100)
-player2 = Player(810, 350, 48, 48, (0, 0, 255), 10000, 900, 100)
+player1 = Player(400, 350, 48, 48, (255, 0, 0), 10000, 100, 100, 3)
+player2 = Player(810, 350, 48, 48, (0, 0, 255), 10000, 900, 100, 3)
 players = [player1, player2]
 
 try:
@@ -67,8 +67,7 @@ while True:  # this while loop will continiously look for connections
 '''
 
 
-def threaded_client(my_conn, player, gameId):  # conn = connection
-    global idCount
+def threaded_client(my_conn, player, gameId, idCount):  # conn = connection
     my_conn.send(pickle.dumps(players[player]))  # this will convert to string and send it to the player
     while True:
         try:
@@ -76,7 +75,6 @@ def threaded_client(my_conn, player, gameId):  # conn = connection
                 2048))
             players[player] = data
             if gameId in games:
-                reply = games[gameId]
 
                 if not data:
                     break
@@ -114,10 +112,12 @@ while True:  # this while loop will continiously look for connections
     p = 0
     gameId = (idCount - 1) // 2
     if idCount % 2 == 1:
-        games[gameId] = players[0]
+        games[gameId] = players[gameId]
         print("Creating new game...")
     else:
         games[gameId].ready = True
         p = 1
 
-    start_new_thread(threaded_client, (conn, p, gameId))
+    start_new_thread(threaded_client, (conn, p, gameId, idCount))
+    print(idCount)
+    print(gameId)

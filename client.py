@@ -1,6 +1,6 @@
 import pygame
 from network import Network  # this will import the network class from network file
-from world import *
+from world import World,world_data
 import pickle
 import spritesheet
 

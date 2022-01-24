@@ -3,7 +3,7 @@ import pygame.time
 
 import world
 from pygame.locals import *
-from world import *
+from world import World, world_data, width, height
 
 win = pygame.display.set_mode((width, height))  # Size of window
 pygame.init()
@@ -14,7 +14,7 @@ p2 = 0
 
 
 class Player():
-    def __init__(self, x, y, width, height, color, health, health_x, health_y):
+    def __init__(self, x, y, width, height, color, health, health_x, health_y, lives):
         self.ready = False
         self.x = x
         self.y = y
@@ -30,13 +30,11 @@ class Player():
         self.health_ratio = self.maximum_health / self.health_bar_length
         self.health_x = health_x
         self.health_y = health_y
+        self.lives = 3
         self.keys = pygame.key.get_pressed()
         self.action = 0
         self.frame = 0
         self.last_update = pygame.time.get_ticks()
-
-    def connected(self):
-        return self.ready
 
     def draw_character(self, win, animation_list):
         current_time = pygame.time.get_ticks()
@@ -140,3 +138,7 @@ class Player():
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.display_health()
         # pygame.draw.rect(win, (255, 255, 255), self.rect, 2)
+
+player1 = Player(400, 350, 48, 48, (255, 0, 0), 10000, 100, 100, 3)
+player2 = Player(810, 350, 48, 48, (0, 0, 255), 10000, 900, 100, 3)
+players = [player1, player2]
