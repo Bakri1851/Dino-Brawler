@@ -15,9 +15,6 @@ pygame.display.set_caption("MultiplayerTest")  # Cilent Name
 
 tile_size = 50
 
-# will load up background
-bg_img = pygame.image.load(
-    r"C:\Users\Bakri\PycharmProjects\Coursework\Game Assets\Map Assets\2 Background\Background3.png")
 world = World(world_data)
 
 chosen_animation_list = characters[3]
