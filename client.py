@@ -55,12 +55,6 @@ character_selection_buttons = (Button("Doux", 100, 200, (0, 156, 255), (0, 0, 0)
                        Button("Tard", 700, 200, (255, 174, 0), (0, 0, 0)),
                        Button("Vita", 1000, 200, (182, 255, 0), (0, 0, 0)))
 
-# Doux (0, 156, 255)
-# Mort (255, 0, 0)
-# Tard (255, 174, 0)
-# Vita (182, 255, 0)
-
-
 play_again_button = Button("New Game?", 525, 550, (255, 255, 255), (0, 0, 255))
 
 
