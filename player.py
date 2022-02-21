@@ -1,29 +1,27 @@
-# import spritesheet
 import pygame.time
-
 import world
-from pygame.locals import *
 from world import World, world_data, width, height
 
 win = pygame.display.set_mode((width, height))  # Size of window
 pygame.init()
 
 world = World(world_data)
-p = 0
-p2 = 0
 
 
 class Player():
-    def __init__(self, x, y, width, height, color, health, health_x, health_y, lives):
+    def __init__(self, x, y, width, height, lives, health, health_x, health_y, direction):
         self.ready = False
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.color = color
         self.rect = pygame.Rect(x, y, width, height)
         self.vel_y = 0
         self.jumped = False
+        self.in_air = True
+
+        self.lives = lives
+
         self.current_health = health
         self.maximum_health = health
         self.health_bar_length = 250
@@ -31,19 +29,14 @@ class Player():
         self.health_x = health_x
         self.health_y = health_y
         self.lives = 3
+
         self.keys = pygame.key.get_pressed()
+
         self.action = 0
         self.frame = 0
-        self.last_update = pygame.time.get_ticks()
 
-    def draw_character(self, win, animation_list):
-        current_time = pygame.time.get_ticks()
-        if current_time - self.last_update >= 125:
-            self.frame += 1
-            self.last_update = current_time
-            if self.frame >= len(animation_list[self.action]):
-                self.frame = 0
-        win.blit(animation_list[self.action][self.frame], (self.x - 10, self.y - 10))
+        self.direction = direction
+
 
     def get_damage(self, amount):
         if self.current_health > 0:
@@ -65,24 +58,18 @@ class Player():
     def move(self):
         dx = 0
         dy = 0
-        self.action = 0
 
         # get key presses
         self.keys = pygame.key.get_pressed()
         if self.keys[pygame.K_a] or self.keys[pygame.K_LEFT]:
             dx -= 5
-            self.frame = 0
 
         if self.keys[pygame.K_d] or self.keys[pygame.K_RIGHT]:
             dx += 5
-            self.action = 1
-            self.frame = 0
 
-        if (self.keys[pygame.K_w] or self.keys[pygame.K_UP]) and self.jumped == False:
+        if (self.keys[pygame.K_w] or self.keys[pygame.K_UP]) and self.jumped == False and self.in_air == False:
             self.vel_y = -15
             self.jumped = True
-            self.action = 7
-            self.frame = 0
 
         if not (self.keys[pygame.K_w] or self.keys[pygame.K_UP]):
             self.jumped = False
@@ -94,6 +81,7 @@ class Player():
         dy += self.vel_y
 
         # collision
+        self.in_air = True
         for tile in world.tile_list:
             # check for collision in x direction
             if tile[1].colliderect(self.x + dx, self.y, self.width, self.height):
@@ -107,6 +95,9 @@ class Player():
                 # check if above the ground
                 elif self.vel_y >= 0:
                     dy = tile[1].top - self.rect.bottom
+                    self.vel_y = 0
+                    self.in_air = False
+
 
         # coord
         self.x += dx
@@ -116,29 +107,12 @@ class Player():
 
     def attack(self, player, player2):
 
-        if self.keys[pygame.K_j]:
-            self.action = 2
-            self.frame = 0
-
-        if self.keys[pygame.K_k]:
-            self.action = 5
-            self.frame = 0
-
-        if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_j]:
+        if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_j] and not player2.keys[pygame.K_k]:
             player.get_damage(50)
-            player.action = 3
-            self.frame = 0
 
-        if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_k]:
+        if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_k] and not player2.keys[pygame.K_j]:
             player.get_damage(100)
-            player.action = 3
-            self.frame = 0
 
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.display_health()
-        # pygame.draw.rect(win, (255, 255, 255), self.rect, 2)
-
-player1 = Player(400, 350, 48, 48, (255, 0, 0), 10000, 100, 100, 3)
-player2 = Player(810, 350, 48, 48, (0, 0, 255), 10000, 900, 100, 3)
-players = [player1, player2]
