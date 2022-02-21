@@ -1,12 +1,13 @@
-
 class Game():
     def __init__(self, id, players):
+        self.players = players
         self.id = id
         self.ready = False
-        #self.lives = [players[0].lives, players[1].lives]
+        # self.lives = [players[0].lives, players[1].lives]
 
-    def connected(self): # this will check if players have connected
+    def connected(self):  # this will check if players have connected
         return self.ready
+
     '''
     def check_lives(self):
         if players[0].current_health <= 0:
