@@ -1,23 +1,23 @@
 import pygame
 import spritesheet
 
-sprite_sheet_image_doux = pygame.image.load('doux.png').convert_alpha()
-sprite_sheet_image_doux2 = pygame.image.load('doux2.png').convert_alpha()
+sprite_sheet_image_doux = pygame.image.load('Characters/doux.png').convert_alpha()
+sprite_sheet_image_doux2 = pygame.image.load('Characters/doux2.png').convert_alpha()
 sprite_sheet_doux = spritesheet.SpriteSheet(sprite_sheet_image_doux)
 sprite_sheet_doux2 = spritesheet.SpriteSheet(sprite_sheet_image_doux2)
 
-sprite_sheet_image_mort = pygame.image.load('mort.png').convert_alpha()
-sprite_sheet_image_mort2 = pygame.image.load('mort2.png').convert_alpha()
+sprite_sheet_image_mort = pygame.image.load('Characters/mort.png').convert_alpha()
+sprite_sheet_image_mort2 = pygame.image.load('Characters/mort2.png').convert_alpha()
 sprite_sheet_mort = spritesheet.SpriteSheet(sprite_sheet_image_mort)
 sprite_sheet_mort2 = spritesheet.SpriteSheet(sprite_sheet_image_mort2)
 
-sprite_sheet_image_tard = pygame.image.load('tard.png').convert_alpha()
-sprite_sheet_image_tard2 = pygame.image.load('tard2.png').convert_alpha()
+sprite_sheet_image_tard = pygame.image.load('Characters/tard.png').convert_alpha()
+sprite_sheet_image_tard2 = pygame.image.load('Characters/tard2.png').convert_alpha()
 sprite_sheet_tard = spritesheet.SpriteSheet(sprite_sheet_image_tard)
 sprite_sheet_tard2 = spritesheet.SpriteSheet(sprite_sheet_image_tard2)
 
-sprite_sheet_image_vita = pygame.image.load('vita.png').convert_alpha()
-sprite_sheet_image_vita2 = pygame.image.load('vita2.png').convert_alpha()
+sprite_sheet_image_vita = pygame.image.load('Characters/vita.png').convert_alpha()
+sprite_sheet_image_vita2 = pygame.image.load('Characters/vita2.png').convert_alpha()
 sprite_sheet_vita = spritesheet.SpriteSheet(sprite_sheet_image_vita)
 sprite_sheet_vita2 = spritesheet.SpriteSheet(sprite_sheet_image_vita2)
 

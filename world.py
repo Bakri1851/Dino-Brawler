@@ -15,6 +15,9 @@ class World():
         metalBar_img = pygame.image.load(
             r"C:\Users\Bakri\PycharmProjects\Coursework\Game Assets\Map Assets\1 Tiles\IndustrialTile_27.png")
 
+#        metalTile_img = pygame.image.load('Map Assets/1 Tiles/IndustrialTile_25.png')
+#        metalBar_img = pygame.image.load('Map Assets/1 Tiles/IndustrialTile_27.png')
+
         row_count = 0
         for row in data:
             col_count = 0
