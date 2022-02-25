@@ -184,6 +184,7 @@ def main():
             if player.current_lives == 0:
                 loser_screen()
                 run = False
+
             if player2.current_lives == 0:
                 winner_screen()
                 run = False

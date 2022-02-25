@@ -30,7 +30,7 @@ class Player():
         lives = 3
         self.current_lives = lives
         self.max_lives = lives
-        self.lives_bar_length = 50
+        self.lives_bar_length = 60
         self.live_ratio = self.max_lives / self.lives_bar_length
         self.lives_x = lives_x
         self.lives_y = lives_y
@@ -48,14 +48,17 @@ class Player():
         if self.current_health <= 0:
             self.current_health = 0
 
-    def reduce_lives(self):
-        self.current_lives -= 1
-
     def get_health(self, amount):
         if self.current_health < self.maximum_health:
             self.current_health += amount
         if self.current_health >= self.maximum_health:
             self.current_health = self.maximum_health
+
+    def reduce_lives(self,amount):
+        self.current_lives -= amount
+
+    def gain_lives(self,amount):
+        self.current_lives += amount
 
     def display_health(self):
         pygame.draw.rect(win, (255, 0, 0), (self.health_x, self.health_y, self.current_health / self.health_ratio, 15))
@@ -127,11 +130,11 @@ class Player():
             player.get_damage(100)
 
         if player.current_health <= 0:
-            player.reduce_lives()
+            player.reduce_lives(1)
             player.get_health(10000)
 
         if player2.current_health <= 0:
-            player2.reduce_lives()
+            player2.reduce_lives(1)
             player2.get_health(10000)
 
     def update(self):
