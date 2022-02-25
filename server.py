@@ -2,6 +2,7 @@ import socket
 from _thread import start_new_thread
 from game import Game
 from player import Player
+from characters import characters
 import pickle
 
 server = socket.gethostbyname(
@@ -10,8 +11,8 @@ port = 5555  # this is the port I will use for the connections
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket I will use for final product
 
-player1 = Player(400, 350, 48, 48, 10000, 100, 725, 100, 755, "RIGHT")
-player2 = Player(810, 350, 48, 48, 10000, 900, 725, 900, 755, "LEFT",)
+player1 = Player(400, 350, 48, 48, 10000, 100, 725, 100, 755, "RIGHT", characters[1])
+player2 = Player(810, 350, 48, 48, 10000, 900, 725, 900, 755, "LEFT", characters[3])
 players = [player1, player2]
 
 

@@ -9,7 +9,7 @@ world = World(world_data)
 
 
 class Player():
-    def __init__(self, x, y, width, height, health, health_x, health_y, lives_x, lives_y, direction):
+    def __init__(self, x, y, width, height, health, health_x, health_y, lives_x, lives_y, direction, chosen_char):
         self.ready = False
         self.x = x
         self.y = y
@@ -41,6 +41,7 @@ class Player():
         self.frame = 0
 
         self.direction = direction
+        self.character = chosen_char
 
     def get_damage(self, amount):
         if self.current_health > 0:
