@@ -3,13 +3,13 @@ import world
 from world import World, world_data, width, height
 
 win = pygame.display.set_mode((width, height))  # Size of window
-pygame.init()
+#pygame.init()
 
 world = World(world_data)
 
 
 class Player():
-    def __init__(self, x, y, width, height, lives, health, health_x, health_y, direction):
+    def __init__(self, x, y, width, height, health, health_x, health_y, lives_x, lives_y, direction):
         self.ready = False
         self.x = x
         self.y = y
@@ -20,15 +20,21 @@ class Player():
         self.jumped = False
         self.in_air = True
 
-        self.lives = lives
-
         self.current_health = health
         self.maximum_health = health
         self.health_bar_length = 250
         self.health_ratio = self.maximum_health / self.health_bar_length
         self.health_x = health_x
         self.health_y = health_y
-        self.lives = 3
+
+        lives = 3
+        self.current_lives = lives
+        self.max_lives = lives
+        self.lives_bar_length = 50
+        self.live_ratio = self.max_lives / self.lives_bar_length
+        self.lives_x = lives_x
+        self.lives_y = lives_y
+
 
         self.keys = pygame.key.get_pressed()
 
@@ -37,12 +43,14 @@ class Player():
 
         self.direction = direction
 
-
     def get_damage(self, amount):
         if self.current_health > 0:
             self.current_health -= amount
         if self.current_health <= 0:
             self.current_health = 0
+
+    def reduce_lives(self):
+        self.current_lives -= 1
 
     def get_health(self, amount):
         if self.current_health < self.maximum_health:
@@ -52,8 +60,14 @@ class Player():
 
     def display_health(self):
         pygame.draw.rect(win, (255, 0, 0), (self.health_x, self.health_y, self.current_health / self.health_ratio, 15))
-        pygame.draw.rect(win, (255, 255, 255), (self.health_x, self.health_y, self.health_bar_length, 15), 5)
+        pygame.draw.rect(win, (0, 0, 0), (self.health_x, self.health_y, self.health_bar_length, 15), 5)
         # if want health bar above player swap health.x with x - 30 and health.y with y - 30
+
+    def display_lives(self):
+        pygame.draw.rect(win, (51, 255, 51), (self.lives_x, self.lives_y, self.current_lives / self.live_ratio, 15))
+        pygame.draw.rect(win, (0, 0, 0), (self.lives_x, self.lives_y, self.lives_bar_length, 15), 5)
+        pygame.draw.line(win, (0,0,0), (self.lives_x + self.lives_bar_length/3, self.lives_y), (self.lives_x + self.lives_bar_length/3, self.lives_y + 15), 5)
+        pygame.draw.line(win, (0,0,0), (self.lives_x + 2*self.lives_bar_length/3, self.lives_y), (self.lives_x + 2*self.lives_bar_length/3, self.lives_y + 15), 5)
 
     def move(self):
         dx = 0
@@ -73,7 +87,6 @@ class Player():
 
         if not (self.keys[pygame.K_w] or self.keys[pygame.K_UP]):
             self.jumped = False
-
         # this is the gravity
         self.vel_y += 1
         if self.vel_y > 10:
@@ -98,7 +111,6 @@ class Player():
                     self.vel_y = 0
                     self.in_air = False
 
-
         # coord
         self.x += dx
         self.y += dy
@@ -112,6 +124,14 @@ class Player():
 
         if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_k] and not player2.keys[pygame.K_j]:
             player.get_damage(100)
+
+        if player.current_health <= 0:
+            player.reduce_lives()
+            player.get_health(10000)
+
+        if player2.current_health <= 0:
+            player2.reduce_lives()
+            player2.get_health(10000)
 
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)

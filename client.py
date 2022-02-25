@@ -6,7 +6,7 @@ from characters import characters
 pygame.font.init()
 
 width = 1250  # width of window
-height = 700  # height of window
+height = 800  # height of window
 win = pygame.display.set_mode((width, height))  # Size of window
 pygame.display.set_caption("MultiplayerTest")  # Cilent Name
 
@@ -19,7 +19,7 @@ world = World(world_data)
 
 chosen_animation_list = characters[3]
 
-animation_cooldown = 125
+animation_cooldown = 100
 
 
 class Button:
@@ -51,9 +51,9 @@ class Button:
 menu_buttons = (Button("Play Game", 525, 350, (255, 255, 255), (255, 0, 0)))
 
 character_selection_buttons = (Button("Doux", 100, 200, (0, 156, 255), (0, 0, 0)),
-                       Button("Mort", 400, 200, (255, 0, 0), (0, 0, 0)),
-                       Button("Tard", 700, 200, (255, 174, 0), (0, 0, 0)),
-                       Button("Vita", 1000, 200, (182, 255, 0), (0, 0, 0)))
+                               Button("Mort", 400, 200, (255, 0, 0), (0, 0, 0)),
+                               Button("Tard", 700, 200, (255, 174, 0), (0, 0, 0)),
+                               Button("Vita", 1000, 200, (182, 255, 0), (0, 0, 0)))
 
 play_again_button = Button("New Game?", 525, 550, (255, 255, 255), (0, 0, 255))
 
@@ -65,7 +65,7 @@ def draw_grid():
 
 
 def update_screen(win, player, player2):
-    win.fill((0, 0, 0))
+    win.fill((193, 205, 205))
 
     if player.ready == True and player2.ready == True:
 
@@ -77,12 +77,21 @@ def update_screen(win, player, player2):
 
         player.display_health()
         player2.display_health()
+        player.display_lives()
+        player2.display_lives()
+
+        font = pygame.font.SysFont("Agency FB", 80)
+
+        text = font.render("P1", True, (255, 0, 0))
+        win.blit(text, (25, 700))
+        text = font.render("P2", True, (255, 0, 0))
+        win.blit(text, (825, 700))
 
         player.update()
         player2.update()
     else:
         font = pygame.font.SysFont("Agency FB", 80)
-        text = font.render("Waiting for Player...", True, (255, 0, 0), True)
+        text = font.render("Waiting for Player...", True, (255, 0, 0))
         win.blit(text, (width / 2 - text.get_width() / 2, height / 2 - text.get_height() / 2))
 
     pygame.display.update()
@@ -172,10 +181,10 @@ def main():
 
                 player.frame = 0
 
-            if player.current_health <= 0:
+            if player.current_lives == 0:
                 loser_screen()
                 run = False
-            if player2.current_health <= 0:
+            if player2.current_lives == 0:
                 winner_screen()
                 run = False
 
