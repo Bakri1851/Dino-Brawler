@@ -3,7 +3,7 @@ import world
 from world import World, world_data, width, height
 
 win = pygame.display.set_mode((width, height))  # Size of window
-#pygame.init()
+# pygame.init()
 
 world = World(world_data)
 
@@ -35,7 +35,6 @@ class Player():
         self.lives_x = lives_x
         self.lives_y = lives_y
 
-
         self.keys = pygame.key.get_pressed()
 
         self.action = 0
@@ -66,8 +65,10 @@ class Player():
     def display_lives(self):
         pygame.draw.rect(win, (51, 255, 51), (self.lives_x, self.lives_y, self.current_lives / self.live_ratio, 15))
         pygame.draw.rect(win, (0, 0, 0), (self.lives_x, self.lives_y, self.lives_bar_length, 15), 5)
-        pygame.draw.line(win, (0,0,0), (self.lives_x + self.lives_bar_length/3, self.lives_y), (self.lives_x + self.lives_bar_length/3, self.lives_y + 15), 5)
-        pygame.draw.line(win, (0,0,0), (self.lives_x + 2*self.lives_bar_length/3, self.lives_y), (self.lives_x + 2*self.lives_bar_length/3, self.lives_y + 15), 5)
+        pygame.draw.line(win, (0, 0, 0), (self.lives_x + self.lives_bar_length / 3, self.lives_y),
+                         (self.lives_x + self.lives_bar_length / 3, self.lives_y + 15), 5)
+        pygame.draw.line(win, (0, 0, 0), (self.lives_x + 2 * self.lives_bar_length / 3, self.lives_y),
+                         (self.lives_x + 2 * self.lives_bar_length / 3, self.lives_y + 15), 5)
 
     def move(self):
         dx = 0
