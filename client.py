@@ -17,7 +17,7 @@ tile_size = 50
 
 world = World(world_data)
 
-chosen_animation_list = characters[3]
+chosen_animation_list = characters[1]
 
 animation_cooldown = 100
 
@@ -107,6 +107,7 @@ def main():
     player.action = 0
     player.frame = 0
     last_update = pygame.time.get_ticks()
+
 
     while run:
 

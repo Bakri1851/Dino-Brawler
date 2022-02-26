@@ -1,6 +1,7 @@
-import pygame.time
+import pygame
 import world
 from world import World, world_data, width, height
+from characters import characters
 
 win = pygame.display.set_mode((width, height))  # Size of window
 # pygame.init()
@@ -41,7 +42,7 @@ class Player():
         self.frame = 0
 
         self.direction = direction
-        self.character = chosen_char
+        self.chosen_char = chosen_char
 
     def get_damage(self, amount):
         if self.current_health > 0:
@@ -55,10 +56,10 @@ class Player():
         if self.current_health >= self.maximum_health:
             self.current_health = self.maximum_health
 
-    def reduce_lives(self,amount):
+    def reduce_lives(self, amount):
         self.current_lives -= amount
 
-    def gain_lives(self,amount):
+    def gain_lives(self, amount):
         self.current_lives += amount
 
     def display_health(self):
