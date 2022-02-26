@@ -269,7 +269,7 @@ def menu_screen():
 
     while run:
         clock.tick(60)
-        win.fill((0, 0, 0))
+        win.fill((128, 128, 128))
 
         menu_buttons.draw(win)
 
@@ -311,15 +311,44 @@ def select_character(player):
         choose_character_text = font.render("CHOOSE YOUR CHARACTER", True, (255, 255, 255))
         win.blit(choose_character_text, (175, 25))
 
-        doux_desc = font.render("", True, (0, 156, 255))
-        mort_desc = font.render("", True, (255, 0, 0))
-        tard_desc = font.render("", True, (255, 174, 0))
-        vita_desc = font.render("", True, (182, 255, 0))
+        font = pygame.font.SysFont("Agency FB", 40)
 
-        win.blit(pygame.transform.scale(characters["Doux"][1][frame], (144, 144)), (105, 275))
-        win.blit(pygame.transform.scale(characters["Mort"][1][frame], (144, 144)), (405, 275))
-        win.blit(pygame.transform.scale(characters["Tard"][1][frame], (144, 144)), (705, 275))
-        win.blit(pygame.transform.scale(characters["Vita"][1][frame], (144, 144)), (1005, 275))
+        doux_desc_health = font.render("Health: Normal", True, (0, 156, 255))
+        doux_desc_attack = font.render("Attack: Normal", True, (0, 156, 255))
+        doux_desc_speed = font.render("Speed: Normal ", True, (0, 156, 255))
+
+        mort_desc_health = font.render("Health: Low", True, (255, 0, 0))
+        mort_desc_attack = font.render("Attack: High", True, (255, 0, 0))
+        mort_desc_speed = font.render("Speed: Normal", True, (255, 0, 0))
+
+        tard_desc_health = font.render("Health: Low", True, (255, 174, 0))
+        tard_desc_attack = font.render("Attack: Normal", True, (255, 174, 0))
+        tard_desc_speed = font.render("Speed: High", True, (255, 174, 0))
+
+        vita_desc_health = font.render("Health: High", True, (182, 255, 0))
+        vita_desc_attack = font.render("Attack: Low", True, (182, 255, 0))
+        vita_desc_speed = font.render("Speed: Low", True, (182, 255, 0))
+
+        win.blit(doux_desc_health, (100, 450))
+        win.blit(doux_desc_attack, (100, 500))
+        win.blit(doux_desc_speed, (100, 550))
+
+        win.blit(mort_desc_health, (400, 450))
+        win.blit(mort_desc_attack, (400, 500))
+        win.blit(mort_desc_speed, (400, 550))
+
+        win.blit(tard_desc_health, (700, 450))
+        win.blit(tard_desc_attack, (700, 500))
+        win.blit(tard_desc_speed, (700, 550))
+
+        win.blit(vita_desc_health, (1000, 450))
+        win.blit(vita_desc_attack, (1000, 500))
+        win.blit(vita_desc_speed, (1000, 550))
+
+        win.blit(pygame.transform.scale(characters["Doux"][1][frame], (144, 144)), (105, 300))
+        win.blit(pygame.transform.scale(characters["Mort"][1][frame], (144, 144)), (405, 300))
+        win.blit(pygame.transform.scale(characters["Tard"][1][frame], (144, 144)), (705, 300))
+        win.blit(pygame.transform.scale(characters["Vita"][1][frame], (144, 144)), (1005, 300))
 
         for button in character_selection_buttons:
             button.draw(win)
