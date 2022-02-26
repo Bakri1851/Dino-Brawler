@@ -8,7 +8,7 @@ world = World(world_data)
 
 
 class Player():
-    def __init__(self, x, y, width, height, health, health_x, health_y, lives_x, lives_y, direction):
+    def __init__(self, x, y, width, height, health_x, health_y, lives_x, lives_y, direction):
         self.selected_char = False
         self.ready = False
 
@@ -21,13 +21,6 @@ class Player():
         self.jumped = False
         self.in_air = True
 
-        self.current_health = health
-        self.maximum_health = health
-        self.health_bar_length = 250
-        self.health_ratio = self.maximum_health / self.health_bar_length
-        self.health_x = health_x
-        self.health_y = health_y
-
         lives = 3
         self.current_lives = lives
         self.max_lives = lives
@@ -36,6 +29,18 @@ class Player():
         self.lives_x = lives_x
         self.lives_y = lives_y
 
+        self.current_health = 10000
+        self.maximum_health = 10000
+        self.health_bar_length = 250
+        self.health_ratio = self.maximum_health / self.health_bar_length
+        self.health_x = health_x
+        self.health_y = health_y
+
+        self.attack_light = 50
+        self.attack_heavy = 100
+
+        self.speed = 5
+
         self.keys = pygame.key.get_pressed()
 
         self.action = 0
@@ -43,10 +48,35 @@ class Player():
 
         self.direction = direction
 
-        # self.chosen_char = None
+        self.chosen_char = None
 
     def choose_character(self, chosen_char):
         self.chosen_char = chosen_char
+        if chosen_char == "Doux":
+            self.current_health = 10000
+            self.maximum_health = 10000
+            self.attack_light = 50
+            self.attack_heavy = 100
+            self.speed = 5
+        elif chosen_char == "Mort":
+            self.current_health = 7500
+            self.maximum_health = 7500
+            self.attack_light = 75
+            self.attack_heavy = 150
+            self.speed = 5
+        elif chosen_char == "Tard":
+            self.current_health = 7500
+            self.maximum_health = 7500
+            self.attack_light = 50
+            self.attack_heavy = 100
+            self.speed = 7
+        elif chosen_char == "Vita":
+            self.current_health = 12500
+            self.maximum_health = 12500
+            self.attack_light = 40
+            self.attack_heavy = 80
+            self.speed = 4
+        self.health_ratio = self.maximum_health / self.health_bar_length
 
     def get_damage(self, amount):
         if self.current_health > 0:
@@ -86,10 +116,10 @@ class Player():
         # get key presses
         self.keys = pygame.key.get_pressed()
         if self.keys[pygame.K_a] or self.keys[pygame.K_LEFT]:
-            dx -= 5
+            dx -= self.speed
 
         if self.keys[pygame.K_d] or self.keys[pygame.K_RIGHT]:
-            dx += 5
+            dx += self.speed
 
         if (self.keys[pygame.K_w] or self.keys[pygame.K_UP]) and self.jumped == False and self.in_air == False:
             self.vel_y = -15
@@ -130,18 +160,18 @@ class Player():
     def attack(self, player, player2):
 
         if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_j] and not player2.keys[pygame.K_k]:
-            player.get_damage(50)
+            player.get_damage(player2.attack_light)
 
         if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_k] and not player2.keys[pygame.K_j]:
             player.get_damage(100)
 
         if player.current_health <= 0:
             player.reduce_lives(1)
-            player.get_health(10000)
+            player.get_health(player.maximum_health)
 
         if player2.current_health <= 0:
             player2.reduce_lives(1)
-            player2.get_health(10000)
+            player2.get_health(player2.maximum_health)
 
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)

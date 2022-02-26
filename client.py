@@ -24,8 +24,6 @@ characters = {
     "Vita": characters[3],
 }
 
-# chosen_animation_list = characters["Mort"]
-
 animation_cooldown = 100
 
 
@@ -117,7 +115,6 @@ def main():
 
     chosen_animation_list = []
     chosen_animation_list2 = []
-
 
     while run:
         clock.tick(60)
@@ -313,6 +310,11 @@ def select_character(player):
         font = pygame.font.SysFont("Agency FB", 110)
         choose_character_text = font.render("CHOOSE YOUR CHARACTER", True, (255, 255, 255))
         win.blit(choose_character_text, (175, 25))
+
+        doux_desc = font.render("", True, (0, 156, 255))
+        mort_desc = font.render("", True, (255, 0, 0))
+        tard_desc = font.render("", True, (255, 174, 0))
+        vita_desc = font.render("", True, (182, 255, 0))
 
         win.blit(pygame.transform.scale(characters["Doux"][1][frame], (144, 144)), (105, 275))
         win.blit(pygame.transform.scale(characters["Mort"][1][frame], (144, 144)), (405, 275))
