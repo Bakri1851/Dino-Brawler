@@ -159,7 +159,7 @@ def main():
 
                     player.frame = 0
 
-                if event.key == pygame.K_j and player.rect.colliderect(player2.rect):
+                if event.key == pygame.K_j:
                     if player.direction == "RIGHT":
                         player.action = 2
 
@@ -168,7 +168,7 @@ def main():
 
                     player.frame = 0
 
-                if event.key == pygame.K_k and player.rect.colliderect(player2.rect):
+                if event.key == pygame.K_k:
                     if player.direction == "RIGHT":
                         player.action = 5
 
