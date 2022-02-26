@@ -1,10 +1,10 @@
 import pygame
 import world
-from world import World, world_data, width, height
+from world import World, map1, map2, width, height
 
 win = pygame.display.set_mode((width, height))  # Size of window
 
-world = World(world_data)
+selected_world = World(map1)
 
 
 class Player():
@@ -58,18 +58,21 @@ class Player():
             self.attack_light = 50
             self.attack_heavy = 100
             self.speed = 5
+
         elif chosen_char == "Mort":
             self.current_health = 7500
             self.maximum_health = 7500
             self.attack_light = 75
             self.attack_heavy = 150
             self.speed = 5
+
         elif chosen_char == "Tard":
             self.current_health = 7500
             self.maximum_health = 7500
             self.attack_light = 50
             self.attack_heavy = 100
             self.speed = 7
+
         elif chosen_char == "Vita":
             self.current_health = 12500
             self.maximum_health = 12500
@@ -78,7 +81,7 @@ class Player():
             self.speed = 4
         self.health_ratio = self.maximum_health / self.health_bar_length
 
-    def get_damage(self, amount):
+    def get_damage(self, amount,):
         if self.current_health > 0:
             self.current_health -= amount
         if self.current_health <= 0:
@@ -135,7 +138,7 @@ class Player():
 
         # collision
         self.in_air = True
-        for tile in world.tile_list:
+        for tile in selected_world.tile_list:
             # check for collision in x direction
             if tile[1].colliderect(self.x + dx, self.y, self.width, self.height):
                 dx = 0
@@ -158,12 +161,11 @@ class Player():
         self.update()
 
     def attack(self, player, player2):
-
         if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_j] and not player2.keys[pygame.K_k]:
             player.get_damage(player2.attack_light)
 
-        if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_k] and not player2.keys[pygame.K_j]:
-            player.get_damage(100)
+        if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_k]  and not player2.keys[pygame.K_j]:
+            player.get_damage(player2.attack_heavy)
 
         if player.current_health <= 0:
             player.reduce_lives(1)
@@ -172,6 +174,8 @@ class Player():
         if player2.current_health <= 0:
             player2.reduce_lives(1)
             player2.get_health(player2.maximum_health)
+
+        player2.attacked = False
 
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)

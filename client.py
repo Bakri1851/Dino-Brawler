@@ -1,6 +1,6 @@
 import pygame
 from network import Network  # this will import the network class from network file
-from world import World, world_data
+from world import World, map1, map2
 from characters import characters
 
 pygame.font.init()
@@ -13,9 +13,7 @@ pygame.display.set_caption("MultiplayerTest")  # Cilent Name
 # When connecting each player is allocated a different position on the map. The client will send new information and
 # the other client position will be sent back to show movement
 
-tile_size = 50
-
-world = World(world_data)
+world = World(map1)
 
 characters = {
     "Doux": characters[0],
@@ -61,12 +59,6 @@ character_selection_buttons = (Button("Doux", 100, 200, (0, 156, 255), (0, 0, 0)
                                Button("Vita", 1000, 200, (182, 255, 0), (0, 0, 0)))
 
 play_again_button = Button("New Game?", 525, 550, (255, 255, 255), (0, 0, 255))
-
-
-def draw_grid():
-    for line in range(0, 30):
-        pygame.draw.line(win, (255, 255, 255), (0, line * tile_size), (width, line * tile_size))
-        pygame.draw.line(win, (255, 255, 255), (line * tile_size, 0), (line * tile_size, height))
 
 
 def update_screen(win, player, player2, chosen_animation_list, chosen_animation_list2):
@@ -128,8 +120,8 @@ def main():
         player.ready = True
         if player.ready == True and player.selected_char == False:
             select_character(player)
-
             chosen_animation_list = characters[player.chosen_char]
+
         if player2.ready == True and player2.selected_char == True:
             chosen_animation_list2 = characters[player2.chosen_char]
 
@@ -167,7 +159,7 @@ def main():
 
                     player.frame = 0
 
-                if event.key == pygame.K_j:
+                if event.key == pygame.K_j and player.rect.colliderect(player2.rect):
                     if player.direction == "RIGHT":
                         player.action = 2
 
@@ -176,7 +168,7 @@ def main():
 
                     player.frame = 0
 
-                if event.key == pygame.K_k:
+                if event.key == pygame.K_k and player.rect.colliderect(player2.rect):
                     if player.direction == "RIGHT":
                         player.action = 5
 
