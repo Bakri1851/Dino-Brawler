@@ -1,17 +1,17 @@
 import pygame
 import world
 from world import World, world_data, width, height
-from characters import characters
 
 win = pygame.display.set_mode((width, height))  # Size of window
-# pygame.init()
 
 world = World(world_data)
 
 
 class Player():
-    def __init__(self, x, y, width, height, health, health_x, health_y, lives_x, lives_y, direction, chosen_char):
+    def __init__(self, x, y, width, height, health, health_x, health_y, lives_x, lives_y, direction):
+        self.selected_char = False
         self.ready = False
+
         self.x = x
         self.y = y
         self.width = width
@@ -42,6 +42,10 @@ class Player():
         self.frame = 0
 
         self.direction = direction
+
+        # self.chosen_char = None
+
+    def choose_character(self, chosen_char):
         self.chosen_char = chosen_char
 
     def get_damage(self, amount):

@@ -17,7 +17,14 @@ tile_size = 50
 
 world = World(world_data)
 
-chosen_animation_list = characters[1]
+characters = {
+    "Doux": characters[0],
+    "Mort": characters[1],
+    "Tard": characters[2],
+    "Vita": characters[3],
+}
+
+# chosen_animation_list = characters["Mort"]
 
 animation_cooldown = 100
 
@@ -64,7 +71,7 @@ def draw_grid():
         pygame.draw.line(win, (255, 255, 255), (line * tile_size, 0), (line * tile_size, height))
 
 
-def update_screen(win, player, player2):
+def update_screen(win, player, player2, chosen_animation_list, chosen_animation_list2):
     win.fill((193, 205, 205))
 
     if player.ready == True and player2.ready == True:
@@ -73,7 +80,7 @@ def update_screen(win, player, player2):
         world.draw()
 
         win.blit(chosen_animation_list[player.action][player.frame], (player.x - 10, player.y - 10))
-        win.blit(chosen_animation_list[player2.action][player2.frame], (player2.x - 10, player2.y - 10))
+        win.blit(chosen_animation_list2[player2.action][player2.frame], (player2.x - 10, player2.y - 10))
 
         player.display_health()
         player2.display_health()
@@ -108,9 +115,11 @@ def main():
     player.frame = 0
     last_update = pygame.time.get_ticks()
 
+    chosen_animation_list = []
+    chosen_animation_list2 = []
+
 
     while run:
-
         clock.tick(60)
         try:
             player2 = n.send(player)
@@ -120,6 +129,12 @@ def main():
             break
 
         player.ready = True
+        if player.ready == True and player.selected_char == False:
+            select_character(player)
+
+            chosen_animation_list = characters[player.chosen_char]
+        if player2.ready == True and player2.selected_char == True:
+            chosen_animation_list2 = characters[player2.chosen_char]
 
         current_time = pygame.time.get_ticks()
         if current_time - last_update >= animation_cooldown:
@@ -194,7 +209,7 @@ def main():
             player.move()
             player.attack(player, player2)
 
-        update_screen(win, player, player2)
+        update_screen(win, player, player2, chosen_animation_list, chosen_animation_list2)
 
 
 def loser_screen():
@@ -277,7 +292,7 @@ def menu_screen():
     main()
 
 
-def select_character():
+def select_character(player):
     run = True
     clock = pygame.time.Clock()
 
@@ -299,10 +314,10 @@ def select_character():
         choose_character_text = font.render("CHOOSE YOUR CHARACTER", True, (255, 255, 255))
         win.blit(choose_character_text, (175, 25))
 
-        win.blit(pygame.transform.scale(characters[0][1][frame], (144, 144)), (105, 275))
-        win.blit(pygame.transform.scale(characters[1][1][frame], (144, 144)), (405, 275))
-        win.blit(pygame.transform.scale(characters[2][1][frame], (144, 144)), (705, 275))
-        win.blit(pygame.transform.scale(characters[3][1][frame], (144, 144)), (1005, 275))
+        win.blit(pygame.transform.scale(characters["Doux"][1][frame], (144, 144)), (105, 275))
+        win.blit(pygame.transform.scale(characters["Mort"][1][frame], (144, 144)), (405, 275))
+        win.blit(pygame.transform.scale(characters["Tard"][1][frame], (144, 144)), (705, 275))
+        win.blit(pygame.transform.scale(characters["Vita"][1][frame], (144, 144)), (1005, 275))
 
         for button in character_selection_buttons:
             button.draw(win)
@@ -318,7 +333,9 @@ def select_character():
                 pos = pygame.mouse.get_pos()
                 for character in character_selection_buttons:
                     if character.click(pos):
-                        print(character.text)
+                        player.choose_character(character.text)
+                        player.selected_char = True
+                        run = False
 
 
 while True:
