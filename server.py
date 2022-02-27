@@ -27,14 +27,13 @@ idCount = 0  # this will keep track of the current id's
 def threaded_client(my_connection, player, gameId):  # conn = connection
     global idCount
 
-
     my_connection.send(pickle.dumps(players[player]))  # this will convert to string and send it to the player
     while True:
         try:
             data = pickle.loads(my_connection.recv(
                 2048 * 10))
-            players[player] = data
             if gameId in games:
+                players[player] = data
 
                 if not data:
                     break
@@ -46,12 +45,10 @@ def threaded_client(my_connection, player, gameId):  # conn = connection
                         reply = players[1]
 
                     my_connection.sendall(pickle.dumps(reply))
-
-
             else:
                 break
         except:
-            break  # if anything else happens hte loop will end so no infinite loop
+            break  # if anything else happens the loop will end so no infinite loop
 
     print("Lost connection")  # this will show that the connection has been
 
@@ -69,22 +66,23 @@ while True:  # this while loop will continuously look for connections
     print("Connected to:", address)
 
     idCount += 1
-    p = 0
+    player = 0
     gameId = (idCount - 1) // 2
-
-    if idCount % 2 == 1:
-        games[gameId] = Game(gameId)
-        print("Creating new game...")
-
-    else:
-        games[gameId].ready = True
-        p = 1
 
     player1 = Player(400, 350, 48, 48, 100, 725, 100, 755, "RIGHT")
     player2 = Player(800, 350, 48, 48, 900, 725, 900, 755, "LEFT")
     players = [player1, player2]
 
-    start_new_thread(threaded_client, (connection, p, gameId))
+    if idCount % 2 == 1:
+        games[gameId] = Game(gameId)
+        print("Creating new game...")
+        games[gameId].ready = False
+
+    else:
+        games[gameId].ready = True
+        player = 1
+
+    start_new_thread(threaded_client, (connection, player, gameId))
     print(idCount)
     print(gameId)
     print(games[gameId].ready)

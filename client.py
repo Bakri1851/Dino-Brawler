@@ -114,9 +114,6 @@ def main():
             run = False
             print("Couldn't get game")
             break
-        player.tried_to_light_attack_this_frame = False
-        player.tried_to_heavy_attack_this_frame = False
-
         player.ready = True
         if player.ready == True and player.selected_char == False:
             select_character(player)
@@ -124,6 +121,9 @@ def main():
 
         if player2.ready == True and player2.selected_char == True:
             chosen_animation_list2 = characters[player2.chosen_char]
+
+        player.tried_to_light_attack_this_frame = False
+        player.tried_to_heavy_attack_this_frame = False
 
         current_time = pygame.time.get_ticks()
         if current_time - last_update >= animation_cooldown:
