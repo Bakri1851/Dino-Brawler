@@ -174,7 +174,7 @@ def main():
 
                     elif player.direction == "LEFT":
                         player.action = 14
-
+#
                     player.frame = 0
 
             if event.type == pygame.KEYUP:
