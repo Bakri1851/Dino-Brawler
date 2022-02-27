@@ -12,6 +12,7 @@ class Player():
         self.selected_char = False
         self.ready = False
         self.tried_to_light_attack_this_frame = False
+        self.tried_to_heavy_attack_this_frame = False
 
         self.x = x
         self.y = y
@@ -56,7 +57,7 @@ class Player():
         if chosen_char == "Doux":
             self.current_health = 10000
             self.maximum_health = 10000
-            self.attack_light = 50
+            self.attack_light = 5000
             self.attack_heavy = 100
             self.speed = 5
 
@@ -160,7 +161,6 @@ class Player():
         self.y += dy
 
         self.update(player2)
-        player2.tried_to_light_attack_this_frame = False
 
     def attack(self, player, player2):
         '''
@@ -197,4 +197,8 @@ class Player():
 
         if player2.tried_to_light_attack_this_frame == True and self.rect.colliderect(player2.rect):
             self.get_damage(player2.attack_light)
-            player2.tried_to_light_attack_this_frame = False
+        player2.tried_to_light_attack_this_frame = False
+
+        if player2.tried_to_heavy_attack_this_frame == True and self.rect.colliderect(player2.rect):
+            self.get_damage(player2.attack_heavy)
+        player2.tried_to_heavy_attack_this_frame = False

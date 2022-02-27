@@ -80,7 +80,8 @@ def update_screen(win, player, player2, chosen_animation_list, chosen_animation_
         win.blit(text, (825, 700))
 
         player.update(player2)
-
+        player2.tried_to_light_attack_this_frame = False
+        player2.tried_to_heavy_attack_this_frame = False
 
     else:
         font = pygame.font.SysFont("Agency FB", 80)
@@ -166,6 +167,7 @@ def main():
                     player.frame = 0
 
                 if event.key == pygame.K_k:
+                    player.tried_to_heavy_attack_this_frame = True
 
                     if player.direction == "RIGHT":
                         player.action = 5
@@ -177,6 +179,9 @@ def main():
 
             if event.type == pygame.KEYUP:
                 player.tried_to_light_attack_this_frame = False
+                player.tried_to_heavy_attack_this_frame = False
+
+
                 if player.direction == "RIGHT":
                     player.action = 0
 
