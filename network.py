@@ -7,7 +7,6 @@ import pickle
 class Network:
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #self.server = "88.97.46.123"  # attempt at online hosting
         self.server = socket.gethostbyname(socket.gethostname())  # attempt at online hosting
         self.port = 5555  # this port has to be the same as the one I used in the server file
         self.address = (self.server, self.port)
