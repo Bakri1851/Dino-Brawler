@@ -7,7 +7,7 @@ selected_world = World(map1)
 
 
 class Player():
-    def __init__(self, x, y, width, height, health_x, health_y, lives_x, lives_y, direction):
+    def __init__(self,  x, y, width, height, health_x, health_y, lives_x, lives_y, direction):
         self.selected_char = False
         self.ready = False
         self.tried_to_light_attack_this_frame = False
