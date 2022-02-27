@@ -11,6 +11,7 @@ class Player():
     def __init__(self, x, y, width, height, health_x, health_y, lives_x, lives_y, direction):
         self.selected_char = False
         self.ready = False
+        self.tried_to_light_attack_this_frame = False
 
         self.x = x
         self.y = y
@@ -81,7 +82,7 @@ class Player():
             self.speed = 4
         self.health_ratio = self.maximum_health / self.health_bar_length
 
-    def get_damage(self, amount,):
+    def get_damage(self, amount):
         if self.current_health > 0:
             self.current_health -= amount
         if self.current_health <= 0:
@@ -112,7 +113,7 @@ class Player():
         pygame.draw.line(win, (0, 0, 0), (self.lives_x + 2 * self.lives_bar_length / 3, self.lives_y),
                          (self.lives_x + 2 * self.lives_bar_length / 3, self.lives_y + 15), 5)
 
-    def move(self):
+    def move(self, player2):
         dx = 0
         dy = 0
 
@@ -158,15 +159,17 @@ class Player():
         self.x += dx
         self.y += dy
 
-        self.update()
+        self.update(player2)
+        player2.tried_to_light_attack_this_frame = False
 
     def attack(self, player, player2):
+        '''
         if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_j] and not player2.keys[pygame.K_k]:
             player.get_damage(player2.attack_light)
 
         if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_k]  and not player2.keys[pygame.K_j]:
             player.get_damage(player2.attack_heavy)
-
+        '''
         if player.current_health <= 0:
             player.reduce_lives(1)
             player.get_health(player.maximum_health)
@@ -177,6 +180,21 @@ class Player():
 
         player2.attacked = False
 
-    def update(self):
+    def update(self, player2):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+
         self.display_health()
+        self.display_lives()
+        player2.display_health()
+        player2.display_lives()
+
+        '''
+        if player2.tried_to_light_attack_this_frame == True and self.rect.colliderect(player2.rect):
+            #self.get_damage(player2.attack_heavy, player2)
+            #print(player2.tried_to_light_attack_this_frame)
+            self.current_health -= player2.attack_light
+        '''
+
+        if player2.tried_to_light_attack_this_frame == True and self.rect.colliderect(player2.rect):
+            self.get_damage(player2.attack_light)
+            player2.tried_to_light_attack_this_frame = False

@@ -72,11 +72,6 @@ def update_screen(win, player, player2, chosen_animation_list, chosen_animation_
         win.blit(chosen_animation_list[player.action][player.frame], (player.x - 10, player.y - 10))
         win.blit(chosen_animation_list2[player2.action][player2.frame], (player2.x - 10, player2.y - 10))
 
-        player.display_health()
-        player2.display_health()
-        player.display_lives()
-        player2.display_lives()
-
         font = pygame.font.SysFont("Agency FB", 80)
 
         text = font.render("P1", True, (255, 0, 0))
@@ -84,8 +79,9 @@ def update_screen(win, player, player2, chosen_animation_list, chosen_animation_
         text = font.render("P2", True, (255, 0, 0))
         win.blit(text, (825, 700))
 
-        player.update()
-        player2.update()
+        player.update(player2)
+
+
     else:
         font = pygame.font.SysFont("Agency FB", 80)
         text = font.render("Waiting for Player...", True, (255, 0, 0))
@@ -160,6 +156,7 @@ def main():
                     player.frame = 0
 
                 if event.key == pygame.K_j:
+                    player.tried_to_light_attack_this_frame = True
                     if player.direction == "RIGHT":
                         player.action = 2
 
@@ -169,15 +166,17 @@ def main():
                     player.frame = 0
 
                 if event.key == pygame.K_k:
+
                     if player.direction == "RIGHT":
                         player.action = 5
 
                     elif player.direction == "LEFT":
                         player.action = 14
-#
+
                     player.frame = 0
 
             if event.type == pygame.KEYUP:
+                player.tried_to_light_attack_this_frame = False
                 if player.direction == "RIGHT":
                     player.action = 0
 
@@ -195,7 +194,7 @@ def main():
                 run = False
 
         if player.ready == True and player2.ready == True:
-            player.move()
+            player.move(player2)
             player.attack(player, player2)
 
         update_screen(win, player, player2, chosen_animation_list, chosen_animation_list2)
