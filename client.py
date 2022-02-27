@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 from network import Network  # this will import the network class from network file
 from world import World, map1, map2
@@ -26,17 +28,17 @@ animation_cooldown = 100
 
 
 class Button:
-    def __init__(self, text, x, y, color, text_color):
+    def __init__(self, text, x, y, box_color, text_color):
         self.text = text
         self.x = x
         self.y = y
-        self.color = color
+        self.box_color = box_color
         self.text_color = text_color
         self.width = 150
         self.height = 100
 
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+        pygame.draw.rect(screen, self.box_color, (self.x, self.y, self.width, self.height))
         font = pygame.font.SysFont("Agency FB", 40)
         text = font.render(self.text, True, self.text_color)
         win.blit(text, (self.x + round(self.width / 2) - round(text.get_width() / 2),
@@ -51,7 +53,8 @@ class Button:
             return False
 
 
-menu_buttons = (Button("Play Game", 525, 350, (255, 255, 255), (255, 0, 0)))
+menu_buttons = (Button("Play Game", 525, 350, (255, 255, 255), (255, 0, 0)),
+                Button("Close Game", 525, 500, (255, 255, 255), (255, 0, 0)))
 
 character_selection_buttons = (Button("Doux", 100, 200, (0, 156, 255), (0, 0, 0)),
                                Button("Mort", 400, 200, (255, 0, 0), (0, 0, 0)),
@@ -78,10 +81,8 @@ def update_screen(win, player, player2, chosen_animation_list, chosen_animation_
         win.blit(text, (25, 700))
         text = font.render("P2", True, (255, 0, 0))
         win.blit(text, (825, 700))
-
         player.update(player2)
-        player2.tried_to_light_attack_this_frame = False
-        player2.tried_to_heavy_attack_this_frame = False
+
 
     else:
         font = pygame.font.SysFont("Agency FB", 80)
@@ -113,6 +114,8 @@ def main():
             run = False
             print("Couldn't get game")
             break
+        player.tried_to_light_attack_this_frame = False
+        player.tried_to_heavy_attack_this_frame = False
 
         player.ready = True
         if player.ready == True and player.selected_char == False:
@@ -158,6 +161,7 @@ def main():
 
                 if event.key == pygame.K_j:
                     player.tried_to_light_attack_this_frame = True
+
                     if player.direction == "RIGHT":
                         player.action = 2
 
@@ -178,9 +182,6 @@ def main():
                     player.frame = 0
 
             if event.type == pygame.KEYUP:
-                player.tried_to_light_attack_this_frame = False
-                player.tried_to_heavy_attack_this_frame = False
-
 
                 if player.direction == "RIGHT":
                     player.action = 0
@@ -267,10 +268,14 @@ def menu_screen():
         clock.tick(60)
         win.fill((128, 128, 128))
 
-        menu_buttons.draw(win)
+        font = pygame.font.SysFont("Agency FB", 120)
+        winner_text = font.render("DINO BRAWL", True, (0, 255, 0))
+        win.blit(winner_text, (400, 150))
+
+        for button in menu_buttons:
+            button.draw(win)
 
         pygame.display.update()
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -279,8 +284,12 @@ def menu_screen():
             if event.type == pygame.MOUSEBUTTONDOWN:
 
                 pos = pygame.mouse.get_pos()
-                if menu_buttons.click(pos):
-                    run = False
+                for button in menu_buttons:
+                    if button.click(pos):
+                        if button.text == "Play Game":
+                            run = False
+                        elif button.text == "Close Game":
+                            sys.exit()
 
     main()
 

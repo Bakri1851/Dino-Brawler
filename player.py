@@ -1,5 +1,4 @@
 import pygame
-import world
 from world import World, map1, map2, width, height
 
 win = pygame.display.set_mode((width, height))  # Size of window
@@ -57,29 +56,29 @@ class Player():
         if chosen_char == "Doux":
             self.current_health = 10000
             self.maximum_health = 10000
-            self.attack_light = 5000
-            self.attack_heavy = 100
+            self.attack_light = 400
+            self.attack_heavy = 800
             self.speed = 5
 
         elif chosen_char == "Mort":
             self.current_health = 7500
             self.maximum_health = 7500
-            self.attack_light = 75
-            self.attack_heavy = 150
+            self.attack_light = 500
+            self.attack_heavy = 1000
             self.speed = 5
 
         elif chosen_char == "Tard":
             self.current_health = 7500
             self.maximum_health = 7500
-            self.attack_light = 50
-            self.attack_heavy = 100
+            self.attack_light = 400
+            self.attack_heavy = 800
             self.speed = 7
 
         elif chosen_char == "Vita":
             self.current_health = 12500
             self.maximum_health = 12500
-            self.attack_light = 40
-            self.attack_heavy = 80
+            self.attack_light = 350
+            self.attack_heavy = 700
             self.speed = 4
         self.health_ratio = self.maximum_health / self.health_bar_length
 
@@ -178,9 +177,8 @@ class Player():
             player2.reduce_lives(1)
             player2.get_health(player2.maximum_health)
 
-        player2.attacked = False
-
     def update(self, player2):
+        amount_dealt = 0
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
         self.display_health()
@@ -194,9 +192,9 @@ class Player():
             #print(player2.tried_to_light_attack_this_frame)
             self.current_health -= player2.attack_light
         '''
-
         if player2.tried_to_light_attack_this_frame == True and self.rect.colliderect(player2.rect):
             self.get_damage(player2.attack_light)
+
         player2.tried_to_light_attack_this_frame = False
 
         if player2.tried_to_heavy_attack_this_frame == True and self.rect.colliderect(player2.rect):

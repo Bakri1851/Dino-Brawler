@@ -6,6 +6,7 @@ import pickle
 
 server = socket.gethostbyname(
     socket.gethostname())  # this will be my local ip address. i get it from command prompt when typing ipconfig
+#192.168.178.35
 port = 5555  # this is the port I will use for the connections
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket I will use for final product
