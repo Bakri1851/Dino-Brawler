@@ -10,10 +10,7 @@ pygame.font.init()
 width = 1250  # width of window
 height = 800  # height of window
 win = pygame.display.set_mode((width, height))  # Size of window
-pygame.display.set_caption("MultiplayerTest")  # Cilent Name
-
-# When connecting each player is allocated a different position on the map. The client will send new information and
-# the other client position will be sent back to show movement
+pygame.display.set_caption("Dino Brawler")  # Cilent Name
 
 world = World(map1)
 
@@ -26,6 +23,15 @@ characters = {
 
 animation_cooldown = 100
 
+black = (0, 0, 0)
+grey = (128, 128, 128)
+white = (255, 255, 255)
+
+
+blue = (0, 156, 255)
+red = (255, 0, 0)
+yellow = (255, 174, 0)
+green = (182, 255, 0)
 
 class Button:
     def __init__(self, text, x, y, box_color, text_color):
@@ -53,19 +59,20 @@ class Button:
             return False
 
 
-menu_buttons = (Button("Play Game", 525, 350, (255, 255, 255), (255, 0, 0)),
-                Button("Close Game", 525, 500, (255, 255, 255), (255, 0, 0)))
+menu_buttons = (Button("Play Game", 525, 350, white, red),
+                Button("Close Game", 525, 500, white, red))
 
-character_selection_buttons = (Button("Doux", 100, 200, (0, 156, 255), (0, 0, 0)),
-                               Button("Mort", 400, 200, (255, 0, 0), (0, 0, 0)),
-                               Button("Tard", 700, 200, (255, 174, 0), (0, 0, 0)),
-                               Button("Vita", 1000, 200, (182, 255, 0), (0, 0, 0)))
+character_selection_buttons = (Button("Doux", 100, 200, blue, black),
+                               Button("Mort", 400, 200, red, black),
+                               Button("Tard", 700, 200, yellow, black),
+                               Button("Vita", 1000, 200, green, black))
 
-play_again_button = Button("New Game?", 525, 550, (255, 255, 255), (0, 0, 255))
+
+play_again_button = Button("Main menu", 525, 550, white, red)
 
 
 def update_screen(win, player, player2, chosen_animation_list, chosen_animation_list2):
-    win.fill((193, 205, 205))
+    win.fill(grey)
 
     if player.ready == True and player2.ready == True:
 
@@ -77,16 +84,16 @@ def update_screen(win, player, player2, chosen_animation_list, chosen_animation_
 
         font = pygame.font.SysFont("Agency FB", 80)
 
-        text = font.render("P1", True, (255, 0, 0))
+        text = font.render("P1", True, red)
         win.blit(text, (25, 700))
-        text = font.render("P2", True, (255, 0, 0))
+        text = font.render("P2", True, red)
         win.blit(text, (825, 700))
         player.update(player2)
 
 
     else:
         font = pygame.font.SysFont("Agency FB", 80)
-        text = font.render("Waiting for Player...", True, (255, 0, 0))
+        text = font.render("Waiting for Player...", True, red)
         win.blit(text, (width / 2 - text.get_width() / 2, height / 2 - text.get_height() / 2))
 
     pygame.display.update()
@@ -96,7 +103,7 @@ def main():
     run = True  # initiates while loop
     clock = pygame.time.Clock()
 
-    network = Network()  # when we connect we will get the player starting position
+    network = Network()
     player = network.get_player()
 
     player.action = 0
@@ -212,9 +219,9 @@ def loser_screen():
 
     while run:
         clock.tick(60)
-        win.fill((0, 0, 0))
+        win.fill(black)
         font = pygame.font.SysFont("Agency FB", 60)
-        loser_text = font.render("YOU LOSE!!!", True, (255, 0, 0))
+        loser_text = font.render("YOU LOSE!!!", True, red)
         win.blit(loser_text, (525, 350))
 
         play_again_button.draw(win)
@@ -239,7 +246,7 @@ def winner_screen():
 
     while run:
         clock.tick(60)
-        win.fill((0, 0, 0))
+        win.fill(black)
         font = pygame.font.SysFont("Agency FB", 60)
         winner_text = font.render("YOU WIN!!!", True, (255, 255, 0))
         win.blit(winner_text, (525, 350))
@@ -259,14 +266,13 @@ def winner_screen():
                     menu_screen()
                     run = False
 
-
 def menu_screen():
     run = True
     clock = pygame.time.Clock()
 
     while run:
         clock.tick(60)
-        win.fill((128, 128, 128))
+        win.fill(grey)
 
         font = pygame.font.SysFont("Agency FB", 120)
         winner_text = font.render("DINO BRAWL", True, (0, 255, 0))
@@ -303,7 +309,7 @@ def select_character(player):
     while run:
 
         clock.tick(60)
-        win.fill((0, 0, 0))
+        win.fill(black)
 
         current_time = pygame.time.get_ticks()
         if current_time - last_update >= animation_cooldown:
@@ -313,26 +319,26 @@ def select_character(player):
                 frame = 0
 
         font = pygame.font.SysFont("Agency FB", 110)
-        choose_character_text = font.render("CHOOSE YOUR CHARACTER", True, (255, 255, 255))
+        choose_character_text = font.render("CHOOSE YOUR CHARACTER", True, white)
         win.blit(choose_character_text, (175, 25))
 
         font = pygame.font.SysFont("Agency FB", 40)
 
-        doux_desc_health = font.render("Health: Normal", True, (0, 156, 255))
-        doux_desc_attack = font.render("Attack: Normal", True, (0, 156, 255))
-        doux_desc_speed = font.render("Speed: Normal ", True, (0, 156, 255))
+        doux_desc_health = font.render("Health: Normal", True, blue)
+        doux_desc_attack = font.render("Attack: Normal", True, blue)
+        doux_desc_speed = font.render("Speed: Normal ", True, blue)
 
-        mort_desc_health = font.render("Health: Low", True, (255, 0, 0))
-        mort_desc_attack = font.render("Attack: High", True, (255, 0, 0))
-        mort_desc_speed = font.render("Speed: Normal", True, (255, 0, 0))
+        mort_desc_health = font.render("Health: Low", True, red)
+        mort_desc_attack = font.render("Attack: High", True, red)
+        mort_desc_speed = font.render("Speed: Normal", True, red)
 
-        tard_desc_health = font.render("Health: Low", True, (255, 174, 0))
-        tard_desc_attack = font.render("Attack: Normal", True, (255, 174, 0))
-        tard_desc_speed = font.render("Speed: High", True, (255, 174, 0))
+        tard_desc_health = font.render("Health: Low", True, yellow)
+        tard_desc_attack = font.render("Attack: Normal", True, yellow)
+        tard_desc_speed = font.render("Speed: High", True, yellow)
 
-        vita_desc_health = font.render("Health: High", True, (182, 255, 0))
-        vita_desc_attack = font.render("Attack: Low", True, (182, 255, 0))
-        vita_desc_speed = font.render("Speed: Low", True, (182, 255, 0))
+        vita_desc_health = font.render("Health: High", True, green)
+        vita_desc_attack = font.render("Attack: Low", True, green)
+        vita_desc_speed = font.render("Speed: Low", True, green)
 
         win.blit(doux_desc_health, (100, 450))
         win.blit(doux_desc_attack, (100, 500))
