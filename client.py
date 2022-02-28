@@ -116,7 +116,7 @@ def main():
             break
         player.ready = True
         if player.ready == True and player.selected_char == False:
-            select_character(player, player2)
+            select_character(player)
             chosen_animation_list = characters[player.chosen_char]
 
         if player2.ready == True and player2.selected_char == True:
@@ -201,7 +201,7 @@ def main():
 
         if player.selected_char == True and player2.selected_char == True:
             player.move(player2)
-            player.attack(player, player2)
+            player.live_check(player, player2)
 
         update_screen(win, player, player2, chosen_animation_list, chosen_animation_list2)
 
@@ -294,7 +294,7 @@ def menu_screen():
     main()
 
 
-def select_character(player,player2):
+def select_character(player):
     run = True
     clock = pygame.time.Clock()
 

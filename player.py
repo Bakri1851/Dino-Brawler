@@ -161,14 +161,8 @@ class Player():
 
         self.update(player2)
 
-    def attack(self, player, player2):
-        '''
-        if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_j] and not player2.keys[pygame.K_k]:
-            player.get_damage(player2.attack_light)
+    def live_check(self, player, player2):
 
-        if player.rect.colliderect(player2.rect) and player2.keys[pygame.K_k]  and not player2.keys[pygame.K_j]:
-            player.get_damage(player2.attack_heavy)
-        '''
         if player.current_health <= 0:
             player.reduce_lives(1)
             player.get_health(player.maximum_health)
@@ -178,7 +172,6 @@ class Player():
             player2.get_health(player2.maximum_health)
 
     def update(self, player2):
-        amount_dealt = 0
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
         self.display_health()
@@ -186,12 +179,6 @@ class Player():
         player2.display_health()
         player2.display_lives()
 
-        '''
-        if player2.tried_to_light_attack_this_frame == True and self.rect.colliderect(player2.rect):
-            #self.get_damage(player2.attack_heavy, player2)
-            #print(player2.tried_to_light_attack_this_frame)
-            self.current_health -= player2.attack_light
-        '''
         if player2.tried_to_light_attack_this_frame == True and self.rect.colliderect(player2.rect):
             self.get_damage(player2.attack_light)
 

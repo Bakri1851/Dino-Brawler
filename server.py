@@ -9,14 +9,14 @@ server = socket.gethostbyname(
 # 192.168.178.35
 port = 5555  # this is the port I will use for the connections
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket I will use for final product
+socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket I will use for final product
 
 try:
-    s.bind((server, port))
-except socket.error as e:
-    str(e)
+    socket.bind((server, port))
+except socket.error as error:
+    str(error)
 
-s.listen()  # this opens up the ports to allow connections
+socket.listen()  # this opens up the ports to allow connections
 print("Waiting for connection, Server started")  # server is now running
 
 games = {}  # this will store our games
@@ -25,7 +25,8 @@ idCount = 0  # this will keep track of the current id's
 
 def threaded_client(my_connection, player, gameId):  # conn = connection
     global idCount
-    my_connection.send(pickle.dumps(games[gameId].players[player]))  # this will convert to string and send it to the player
+    my_connection.send(pickle.dumps(games[gameId].players[player]))
+    # this will convert to string and send it to the player
 
     while True:
         try:
@@ -62,7 +63,7 @@ def threaded_client(my_connection, player, gameId):  # conn = connection
 
 
 while True:  # this while loop will continuously look for connections
-    connection, address = s.accept()
+    connection, address = socket.accept()
     print("Connected to:", address)
 
     idCount += 1
