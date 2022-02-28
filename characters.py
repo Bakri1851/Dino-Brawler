@@ -37,7 +37,7 @@ def get_animations_right(sprite_sheet, animation_list, animation_steps):
         temp_img_list = []
         for _ in range(animation):
             temp_img_list.append(
-                pygame.transform.flip(sprite_sheet.get_image(step_counter, 24, 24, 3, (0, 0, 0)), False, False))
+                pygame.transform.flip(sprite_sheet.get_frames(step_counter, 24, 24, 3, (0, 0, 0)), False, False))
             step_counter += 1
         animation_list.append(temp_img_list)
 
@@ -48,7 +48,7 @@ def get_animations_left(sprite_sheet, animation_list, animation_steps):
         temp_img_list = []
         for _ in range(animation):
             temp_img_list.append(
-                pygame.transform.flip(sprite_sheet.get_image(step_counter, 24, 24, 3, (0, 0, 0)), True, False))
+                pygame.transform.flip(sprite_sheet.get_frames(step_counter, 24, 24, 3, (0, 0, 0)), True, False))
             step_counter += 1
         animation_list.append(temp_img_list)
 

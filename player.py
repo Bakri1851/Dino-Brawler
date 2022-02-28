@@ -97,9 +97,6 @@ class Player():
     def reduce_lives(self, amount):
         self.current_lives -= amount
 
-    def gain_lives(self, amount):
-        self.current_lives += amount
-
     def display_health(self):
         pygame.draw.rect(win, (255, 0, 0), (self.health_x, self.health_y, self.current_health / self.health_ratio, 15))
         pygame.draw.rect(win, (0, 0, 0), (self.health_x, self.health_y, self.health_bar_length, 15), 5)

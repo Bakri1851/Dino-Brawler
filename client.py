@@ -1,5 +1,4 @@
 import sys
-
 import pygame
 from network import Network  # this will import the network class from network file
 from world import World, map1, map2
