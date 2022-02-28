@@ -19,7 +19,6 @@ except socket.error as e:
 s.listen()  # this opens up the ports to allow connections
 print("Waiting for connection, Server started")  # server is now running
 
-connected = set()  # this will store ip addresses of the connected clients
 games = {}  # this will store our games
 idCount = 0  # this will keep track of the current id's
 
@@ -73,14 +72,7 @@ while True:  # this while loop will continuously look for connections
     if idCount % 2 == 1:
         games[gameId] = Game(gameId)
         print("Creating new game...")
-        games[gameId].ready = False
-        games[gameId].players[0].id = gameId
     else:
-        games[gameId].ready = True
         player = 1
-        games[gameId].players[1].id = gameId
 
     start_new_thread(threaded_client, (connection, player, gameId))
-    print(idCount)
-    print(gameId)
-    print(games[gameId].ready)
