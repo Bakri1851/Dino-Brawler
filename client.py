@@ -96,8 +96,8 @@ def main():
     run = True  # initiates while loop
     clock = pygame.time.Clock()
 
-    n = Network()  # when we connect we will get the player starting position
-    player = n.get_player()
+    network = Network()  # when we connect we will get the player starting position
+    player = network.get_player()
 
     player.action = 0
     player.frame = 0
@@ -109,14 +109,14 @@ def main():
     while run:
         clock.tick(60)
         try:
-            player2 = n.send(player)
+            player2 = network.send(player)
         except:
             run = False
             print("Couldn't get game")
             break
         player.ready = True
         if player.ready == True and player.selected_char == False:
-            select_character(player)
+            select_character(player, player2)
             chosen_animation_list = characters[player.chosen_char]
 
         if player2.ready == True and player2.selected_char == True:
@@ -199,7 +199,7 @@ def main():
                 winner_screen()
                 run = False
 
-        if player.ready == True and player2.ready == True:
+        if player.selected_char == True and player2.selected_char == True:
             player.move(player2)
             player.attack(player, player2)
 
@@ -294,7 +294,7 @@ def menu_screen():
     main()
 
 
-def select_character(player):
+def select_character(player,player2):
     run = True
     clock = pygame.time.Clock()
 

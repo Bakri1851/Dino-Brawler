@@ -26,23 +26,24 @@ idCount = 0  # this will keep track of the current id's
 
 def threaded_client(my_connection, player, gameId):  # conn = connection
     global idCount
+    my_connection.send(pickle.dumps(games[gameId].players[player]))  # this will convert to string and send it to the player
 
-    my_connection.send(pickle.dumps(players[player]))  # this will convert to string and send it to the player
     while True:
         try:
             data = pickle.loads(my_connection.recv(
                 2048 * 10))
             if gameId in games:
-                players[player] = data
+
+                games[gameId].players[player] = data
 
                 if not data:
                     break
                 else:
 
                     if player == 1:
-                        reply = players[0]
+                        reply = games[gameId].players[0]
                     else:
-                        reply = players[1]
+                        reply = games[gameId].players[1]
 
                     my_connection.sendall(pickle.dumps(reply))
             else:
@@ -69,18 +70,15 @@ while True:  # this while loop will continuously look for connections
     player = 0
     gameId = (idCount - 1) // 2
 
-    player1 = Player(400, 350, 48, 48, 100, 725, 100, 755, "RIGHT")
-    player2 = Player(800, 350, 48, 48, 900, 725, 900, 755, "LEFT")
-    players = [player1, player2]
-
     if idCount % 2 == 1:
         games[gameId] = Game(gameId)
         print("Creating new game...")
         games[gameId].ready = False
-
+        games[gameId].players[0].id = gameId
     else:
         games[gameId].ready = True
         player = 1
+        games[gameId].players[1].id = gameId
 
     start_new_thread(threaded_client, (connection, player, gameId))
     print(idCount)
