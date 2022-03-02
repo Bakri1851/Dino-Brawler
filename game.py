@@ -1,4 +1,5 @@
 from player import Player
+import random
 
 
 class Game():
@@ -8,3 +9,14 @@ class Game():
         players = [player1, player2]
         self.players = players
         self.id = id
+        self.map_for_game = None
+
+    def world_vote(self):
+        if self.players[0].voted_map == self.players[1].voted_map:
+            self.map_for_game = self.players[0].voted_map
+            self.players[0].decided_map = self.map_for_game
+            self.players[1].decided_map = self.map_for_game
+
+        else:
+            pass
+            #map_for_game = random.choices(self.players[0].voted_map,self.players[1].voted_map)

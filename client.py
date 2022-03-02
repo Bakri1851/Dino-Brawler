@@ -3,7 +3,7 @@ import pygame
 from network import Network  # this will import the network class from network file
 from world import World, map1, map2
 from characters import characters
-
+from game import Game
 pygame.font.init()
 
 width = 1250  # width of window
@@ -11,7 +11,7 @@ height = 800  # height of window
 win = pygame.display.set_mode((width, height))  # Size of window
 pygame.display.set_caption("Dino Brawler")  # Cilent Name
 
-world = World(map1)
+world = World(map2)
 
 characters = {
     "Doux": characters[0],
@@ -20,17 +20,23 @@ characters = {
     "Vita": characters[3],
 }
 
+map1_image = pygame.image.load('Map Assets/Map Screenshots/Map 1.png').convert_alpha()
+map2_image = pygame.image.load('Map Assets/Map Screenshots/Map 2.png').convert_alpha()
+
+map1_image = pygame.transform.scale(map1_image, (500, 280))
+map2_image = pygame.transform.scale(map2_image, (500, 280))
+
 animation_cooldown = 100
 
 black = (0, 0, 0)
 grey = (128, 128, 128)
 white = (255, 255, 255)
 
-
 blue = (0, 156, 255)
 red = (255, 0, 0)
 yellow = (255, 174, 0)
 green = (182, 255, 0)
+
 
 class Button:
     def __init__(self, text, x, y, box_color, text_color):
@@ -66,6 +72,8 @@ character_selection_buttons = (Button("Doux", 100, 200, blue, black),
                                Button("Tard", 700, 200, yellow, black),
                                Button("Vita", 1000, 200, green, black))
 
+map_buttons = (Button("Map 1", 280, 550, white, red),
+               Button("Map 2", 820, 550, white, red))
 
 play_again_button = Button("Main menu", 525, 550, white, red)
 
@@ -78,17 +86,17 @@ def update_screen(win, player, player2, chosen_animation_list, chosen_animation_
         # draws my tiles onto the screen
         world.draw()
 
+        # draw the character onto screen
         win.blit(chosen_animation_list[player.action][player.frame], (player.x - 10, player.y - 10))
         win.blit(chosen_animation_list2[player2.action][player2.frame], (player2.x - 10, player2.y - 10))
 
+        # draw player health and live bars on screen
         font = pygame.font.SysFont("Agency FB", 80)
-
         text = font.render("P1", True, red)
         win.blit(text, (25, 700))
         text = font.render("P2", True, red)
         win.blit(text, (825, 700))
         player.update(player2)
-
 
     else:
         font = pygame.font.SysFont("Agency FB", 80)
@@ -127,6 +135,14 @@ def main():
 
         if player2.ready == True and player2.selected_char == True:
             chosen_animation_list2 = characters[player2.chosen_char]
+
+        if player.selected_char == True and player.has_voted_on_map == False:
+            vote_on_map(player)
+
+        if player.has_voted_on_map == True and player2.has_voted_on_map == True:
+            pass
+
+
 
         player.tried_to_light_attack_this_frame = False
         player.tried_to_heavy_attack_this_frame = False
@@ -205,7 +221,7 @@ def main():
                 winner_screen()
                 run = False
 
-        if player.selected_char == True and player2.selected_char == True:
+        if player.has_voted_on_map == True and player2.has_voted_on_map == True:
             player.move(player2)
             player.live_check(player, player2)
 
@@ -265,6 +281,7 @@ def winner_screen():
                     menu_screen()
                     run = False
 
+
 def menu_screen():
     run = True
     clock = pygame.time.Clock()
@@ -297,6 +314,41 @@ def menu_screen():
                             sys.exit()
 
     main()
+
+
+def vote_on_map(player):
+    run = True
+    clock = pygame.time.Clock()
+
+    while run:
+
+        clock.tick(60)
+        win.fill(black)
+
+        font = pygame.font.SysFont("Agency FB", 110)
+        choose_character_text = font.render("VOTE ON MAP", True, red)
+        win.blit(choose_character_text, (425, 25))
+
+        win.blit(map1_image, (105, 200))
+        win.blit(map2_image, (645, 200))
+
+        for button in map_buttons:
+            button.draw(win)
+
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                pygame.quit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                for map_choice in map_buttons:
+                    if map_choice.click(pos):
+                        player.chosen_map = map_choice.text
+                        player.has_voted_on_map = True
+                        run = False
 
 
 def select_character(player):

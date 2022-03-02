@@ -3,12 +3,13 @@ from world import World, map1, map2, width, height
 
 win = pygame.display.set_mode((width, height))  # Size of window
 
-selected_world = World(map1)
+selected_world = World(map2)
 
 
 class Player():
     def __init__(self, x, y, width, height, health_x, health_y, lives_x, lives_y, direction):
         self.selected_char = False
+        self.has_voted_on_map = False
         self.ready = False
         self.tried_to_light_attack_this_frame = False
         self.tried_to_heavy_attack_this_frame = False
@@ -49,7 +50,9 @@ class Player():
 
         self.direction = direction
 
+        self.voted_map = None
         self.chosen_char = None
+        self.decided_map = None
 
     def choose_character(self, chosen_char):
         self.chosen_char = chosen_char
@@ -81,6 +84,9 @@ class Player():
             self.attack_heavy = 700
             self.speed = 4
         self.health_ratio = self.maximum_health / self.health_bar_length
+
+    def map_vote(self):
+        pass
 
     def get_damage(self, amount):
         if self.current_health > 0:
