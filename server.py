@@ -43,6 +43,15 @@ def threaded_client(my_connection, player, game_id):  # conn = connection
                     else:
                         reply = games[game_id].players[1]
 
+                    if games[game_id].map_been_decided == False and games[game_id].players[0].has_voted_on_map == True and games[game_id].players[1].has_voted_on_map == True:
+                        games[game_id].world_vote()
+                        games[game_id].map_been_decided = True
+                        games[game_id].players[0].done_choosing_map = True
+                        games[game_id].players[1].done_choosing_map = True
+
+                        print("p1 map", games[game_id].players[0].decided_map)
+                        print("p2 map", games[game_id].players[1].decided_map)
+
                     my_connection.sendall(pickle.dumps(reply))
             else:
                 break
@@ -75,4 +84,3 @@ while True:  # this while loop will continuously look for connections
         player = 1
 
     start_new_thread(threaded_client, (connection, player, game_id))
-

@@ -10,13 +10,13 @@ class Game():
         self.players = players
         self.id = id
         self.map_for_game = None
+        self.map_been_decided = False
 
     def world_vote(self):
-        if self.players[0].voted_map == self.players[1].voted_map:
-            self.map_for_game = self.players[0].voted_map
-            self.players[0].decided_map = self.map_for_game
-            self.players[1].decided_map = self.map_for_game
+        if self.players[0].chosen_map == self.players[1].chosen_map:
+            self.map_for_game = self.players[0].chosen_map
 
         else:
-            pass
-            #map_for_game = random.choices(self.players[0].voted_map,self.players[1].voted_map)
+            self.map_for_game = random.choice([self.players[0].chosen_map, self.players[1].chosen_map])
+        self.players[0].decided_map = self.map_for_game
+        self.players[1].decided_map = self.map_for_game

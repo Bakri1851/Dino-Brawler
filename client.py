@@ -1,17 +1,15 @@
 import sys
 import pygame
 from network import Network  # this will import the network class from network file
-from world import World, map1, map2
+from world import World, map1, map2, empty_map
 from characters import characters
-from game import Game
+
 pygame.font.init()
 
 width = 1250  # width of window
 height = 800  # height of window
 win = pygame.display.set_mode((width, height))  # Size of window
 pygame.display.set_caption("Dino Brawler")  # Cilent Name
-
-world = World(map2)
 
 characters = {
     "Doux": characters[0],
@@ -78,7 +76,7 @@ map_buttons = (Button("Map 1", 280, 550, white, red),
 play_again_button = Button("Main menu", 525, 550, white, red)
 
 
-def update_screen(win, player, player2, chosen_animation_list, chosen_animation_list2):
+def update_screen(win, player, player2, chosen_animation_list, chosen_animation_list2, world):
     win.fill(grey)
 
     if player.ready == True and player2.ready == True:
@@ -96,7 +94,7 @@ def update_screen(win, player, player2, chosen_animation_list, chosen_animation_
         win.blit(text, (25, 700))
         text = font.render("P2", True, red)
         win.blit(text, (825, 700))
-        player.update(player2)
+        player.update(player2, win)
 
     else:
         font = pygame.font.SysFont("Agency FB", 80)
@@ -107,6 +105,8 @@ def update_screen(win, player, player2, chosen_animation_list, chosen_animation_
 
 
 def main():
+    world = World(empty_map)
+
     run = True  # initiates while loop
     clock = pygame.time.Clock()
 
@@ -139,10 +139,13 @@ def main():
         if player.selected_char == True and player.has_voted_on_map == False:
             vote_on_map(player)
 
-        if player.has_voted_on_map == True and player2.has_voted_on_map == True:
-            pass
-
-
+        if player.has_voted_on_map == True and player.has_voted_on_map == True:
+            print(player.decided_map)
+            print(player.done_choosing_map)
+            if player.decided_map == "Map 1":
+                world = World(map1)
+            else:
+                world = World(map2)
 
         player.tried_to_light_attack_this_frame = False
         player.tried_to_heavy_attack_this_frame = False
@@ -222,10 +225,10 @@ def main():
                 run = False
 
         if player.has_voted_on_map == True and player2.has_voted_on_map == True:
-            player.move(player2)
+            player.move(win, player2, world)
             player.live_check(player, player2)
 
-        update_screen(win, player, player2, chosen_animation_list, chosen_animation_list2)
+        update_screen(win, player, player2, chosen_animation_list, chosen_animation_list2, world)
 
 
 def loser_screen():

@@ -1,15 +1,16 @@
 import pygame
-from world import World, map1, map2, width, height
 
-win = pygame.display.set_mode((width, height))  # Size of window
+import world
 
-selected_world = World(map2)
+#win = pygame.display.set_mode((width, height))  # Size of window
 
+#selected_world = World(map2)
 
 class Player():
     def __init__(self, x, y, width, height, health_x, health_y, lives_x, lives_y, direction):
         self.selected_char = False
         self.has_voted_on_map = False
+        self.done_choosing_map = False
         self.ready = False
         self.tried_to_light_attack_this_frame = False
         self.tried_to_heavy_attack_this_frame = False
@@ -50,8 +51,8 @@ class Player():
 
         self.direction = direction
 
-        self.voted_map = None
         self.chosen_char = None
+        self.chosen_map = None
         self.decided_map = None
 
     def choose_character(self, chosen_char):
@@ -85,9 +86,6 @@ class Player():
             self.speed = 4
         self.health_ratio = self.maximum_health / self.health_bar_length
 
-    def map_vote(self):
-        pass
-
     def get_damage(self, amount):
         if self.current_health > 0:
             self.current_health -= amount
@@ -103,12 +101,12 @@ class Player():
     def reduce_lives(self, amount):
         self.current_lives -= amount
 
-    def display_health(self):
+    def display_health(self,win):
         pygame.draw.rect(win, (255, 0, 0), (self.health_x, self.health_y, self.current_health / self.health_ratio, 15))
         pygame.draw.rect(win, (0, 0, 0), (self.health_x, self.health_y, self.health_bar_length, 15), 5)
         # if want health bar above player swap health.x with x - 30 and health.y with y - 30
 
-    def display_lives(self):
+    def display_lives(self,win):
         pygame.draw.rect(win, (51, 255, 51), (self.lives_x, self.lives_y, self.current_lives / self.live_ratio, 15))
         pygame.draw.rect(win, (0, 0, 0), (self.lives_x, self.lives_y, self.lives_bar_length, 15), 5)
         pygame.draw.line(win, (0, 0, 0), (self.lives_x + self.lives_bar_length / 3, self.lives_y),
@@ -116,7 +114,7 @@ class Player():
         pygame.draw.line(win, (0, 0, 0), (self.lives_x + 2 * self.lives_bar_length / 3, self.lives_y),
                          (self.lives_x + 2 * self.lives_bar_length / 3, self.lives_y + 15), 5)
 
-    def move(self, player2):
+    def move(self,win, player2, selected_world):
         dx = 0
         dy = 0
 
@@ -162,7 +160,7 @@ class Player():
         self.x += dx
         self.y += dy
 
-        self.update(player2)
+        self.update(player2,win)
 
     def live_check(self, player, player2):
 
@@ -174,13 +172,13 @@ class Player():
             player2.reduce_lives(1)
             player2.get_health(player2.maximum_health)
 
-    def update(self, player2):
+    def update(self, player2,win):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
-        self.display_health()
-        self.display_lives()
-        player2.display_health()
-        player2.display_lives()
+        self.display_health(win)
+        self.display_lives(win)
+        player2.display_health(win)
+        player2.display_lives(win)
 
         if player2.tried_to_light_attack_this_frame == True and self.rect.colliderect(player2.rect):
             self.get_damage(player2.attack_light)
@@ -189,4 +187,5 @@ class Player():
 
         if player2.tried_to_heavy_attack_this_frame == True and self.rect.colliderect(player2.rect):
             self.get_damage(player2.attack_heavy)
+
         player2.tried_to_heavy_attack_this_frame = False
