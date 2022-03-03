@@ -121,6 +121,8 @@ def main():
     chosen_animation_list = []
     chosen_animation_list2 = []
 
+    taken_down_map = False
+
     while run:
         clock.tick(60)
         try:
@@ -130,21 +132,22 @@ def main():
             print("Couldn't get game")
             break
         player.ready = True
-        if player.ready == True and player.selected_char == False:
+        if player.ready and not player.selected_char:
             select_character(player)
             chosen_animation_list = characters[player.chosen_char]
 
-        if player2.ready == True and player2.selected_char == True:
+        if player2.ready and player2.selected_char:
             chosen_animation_list2 = characters[player2.chosen_char]
 
-        if player.selected_char == True and player.has_voted_on_map == False:
+        if player.selected_char and not player.has_voted_on_map:
             vote_on_map(player)
 
-        if player.has_voted_on_map == True and player2.has_voted_on_map == True:
+        if player.has_voted_on_map and player2.has_voted_on_map and not taken_down_map:
             if player.decided_map == "Map 1":
                 world = World(map1)
             else:
                 world = World(map2)
+            taken_down_map = True
 
         player.tried_to_light_attack_this_frame = False
         player.tried_to_heavy_attack_this_frame = False
@@ -223,7 +226,7 @@ def main():
                 winner_screen()
                 run = False
 
-        if player.has_voted_on_map == True and player2.has_voted_on_map == True:
+        if player.has_voted_on_map and player2.has_voted_on_map:
             player.move(win, player2, world)
             player.live_check(player, player2)
 
