@@ -140,8 +140,6 @@ def main():
             vote_on_map(player)
 
         if player.has_voted_on_map == True and player.has_voted_on_map == True:
-            print(player.decided_map)
-            print(player.done_choosing_map)
             if player.decided_map == "Map 1":
                 world = World(map1)
             else:

@@ -37,7 +37,6 @@ def threaded_client(my_connection, player, game_id):  # conn = connection
                 if not data:
                     break
                 else:
-
                     if player == 1:
                         reply = games[game_id].players[0]
                     else:
@@ -48,9 +47,8 @@ def threaded_client(my_connection, player, game_id):  # conn = connection
                         games[game_id].map_been_decided = True
                         games[game_id].players[0].done_choosing_map = True
                         games[game_id].players[1].done_choosing_map = True
-
-                        print("p1 map", games[game_id].players[0].decided_map)
-                        print("p2 map", games[game_id].players[1].decided_map)
+                        print("p1 map in IF", games[game_id].players[0].decided_map)
+                        print("p2 map in IF", games[game_id].players[1].decided_map)
 
                     my_connection.sendall(pickle.dumps(reply))
             else:
