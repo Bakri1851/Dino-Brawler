@@ -1,3 +1,4 @@
+import socket
 import sys
 import pygame
 from network import Network  # this will import the network class from network file
@@ -139,7 +140,7 @@ def main():
         if player.selected_char == True and player.has_voted_on_map == False:
             vote_on_map(player)
 
-        if player.has_voted_on_map == True and player.has_voted_on_map == True:
+        if player.has_voted_on_map == True and player2.has_voted_on_map == True:
             if player.decided_map == "Map 1":
                 world = World(map1)
             else:
