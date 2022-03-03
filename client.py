@@ -5,6 +5,7 @@ from world import World, maps, empty_map
 from characters import characters
 
 pygame.font.init()
+pygame.mixer.init()
 
 width = 1250  # width of window
 height = 800  # height of window
@@ -23,7 +24,6 @@ maps = {
     "Map 2": maps[1],
 }
 
-
 map1_image = pygame.image.load('Map Assets/Map Screenshots/Map 1.png').convert_alpha()
 map2_image = pygame.image.load('Map Assets/Map Screenshots/Map 2.png').convert_alpha()
 
@@ -31,6 +31,12 @@ map1_image = pygame.transform.scale(map1_image, (500, 280))
 map2_image = pygame.transform.scale(map2_image, (500, 280))
 
 animation_cooldown = 100
+
+attack_sound = pygame.mixer.Sound('Sounds/Attack sound effect.wav')
+jump_sound = pygame.mixer.Sound('Sounds/Jump sound effect.wav')
+winner_sound = pygame.mixer.Sound('Sounds/Winner Music.wav')
+loser_sound = pygame.mixer.Sound('Sounds/Loser Music.wav')
+pygame.mixer.music.load('Sounds/Game bgm.wav')
 
 black = (0, 0, 0)
 grey = (128, 128, 128)
@@ -43,18 +49,19 @@ green = (182, 255, 0)
 
 
 class Button:
-    def __init__(self, text, x, y, box_color, text_color):
+    def __init__(self, text, x, y, box_color, text_color, width, height):
         self.text = text
+        self.text_size = height/2.5
         self.x = x
         self.y = y
         self.box_color = box_color
         self.text_color = text_color
-        self.width = 150
-        self.height = 100
+        self.width = width
+        self.height = height
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.box_color, (self.x, self.y, self.width, self.height))
-        font = pygame.font.SysFont("Agency FB", 40)
+        font = pygame.font.SysFont("Agency FB", round(self.text_size))
         text = font.render(self.text, True, self.text_color)
         win.blit(text, (self.x + round(self.width / 2) - round(text.get_width() / 2),
                         self.y + round(self.height / 2) - round(text.get_height() / 2)))
@@ -68,18 +75,21 @@ class Button:
             return False
 
 
-menu_buttons = (Button("Play Game", 525, 350, white, red),
-                Button("Close Game", 525, 500, white, red))
+menu_buttons = (Button("Play Game", 525, 350, white, red, 150, 100),
+                Button("Close Game", 525, 500, white, red, 150, 100),
+                Button("OFF", 150, 50, green, black, 100, 50),
+                Button("ON", 50, 50, red, black, 100, 50))
 
-character_selection_buttons = (Button("Doux", 100, 200, blue, black),
-                               Button("Mort", 400, 200, red, black),
-                               Button("Tard", 700, 200, yellow, black),
-                               Button("Vita", 1000, 200, green, black))
 
-map_buttons = (Button("Map 1", 280, 550, white, red),
-               Button("Map 2", 820, 550, white, red))
+character_selection_buttons = (Button("Doux", 100, 200, blue, black, 150, 100),
+                               Button("Mort", 400, 200, red, black, 150, 100),
+                               Button("Tard", 700, 200, yellow, black, 150, 100),
+                               Button("Vita", 1000, 200, green, black, 150, 100))
 
-play_again_button = Button("Main menu", 525, 550, white, red)
+map_buttons = (Button("Map 1", 280, 550, white, red, 150, 100),
+               Button("Map 2", 820, 550, white, red, 150, 100))
+
+play_again_button = Button("Main menu", 525, 550, white, red, 150, 100)
 
 
 def update_screen(screen, player, player2, chosen_animation_list, chosen_animation_list2, world):
@@ -103,9 +113,10 @@ def update_screen(screen, player, player2, chosen_animation_list, chosen_animati
         player.update(player2, screen)
 
     else:
+        screen.fill(black)
         # if the opposing player isn't ready this screen appears
         font = pygame.font.SysFont("Agency FB", 80)
-        text = font.render("Waiting for Player...", True, red)
+        text = font.render("Waiting for Player...", True, blue)
         screen.blit(text, (width / 2 - text.get_width() / 2, height / 2 - text.get_height() / 2))
 
     pygame.display.update()
@@ -149,11 +160,8 @@ def main():
             vote_on_map(player)
 
         if player.has_voted_on_map and player2.has_voted_on_map and not taken_down_map:
-            if player.chosen_map == "Map 1" and player2.chosen_map == "Map 1":
-                world = World(maps["Map 1"])
-                taken_down_map = True
-            elif player.chosen_map == "Map 2" and player2.chosen_map == "Map 2":
-                world = World(maps["Map 2"])
+            if player.chosen_map == player2.chosen_map:
+                world = World(maps[player.chosen_map])
                 taken_down_map = True
             else:
                 player.map_decider(player2)
@@ -187,6 +195,8 @@ def main():
                     player.direction = "LEFT"
 
                 if (event.key == pygame.K_w or event.key == pygame.K_UP) and player.jumped == False:
+                    pygame.mixer.Sound.play(jump_sound)
+
                     if player.direction == "RIGHT":
                         player.action = 7
 
@@ -197,6 +207,7 @@ def main():
 
                 if event.key == pygame.K_j:
                     player.tried_to_light_attack_this_frame = True
+                    pygame.mixer.Sound.play(attack_sound)
 
                     if player.direction == "RIGHT":
                         player.action = 2
@@ -208,6 +219,7 @@ def main():
 
                 if event.key == pygame.K_k:
                     player.tried_to_heavy_attack_this_frame = True
+                    pygame.mixer.Sound.play(attack_sound)
 
                     if player.direction == "RIGHT":
                         player.action = 5
@@ -228,6 +240,7 @@ def main():
                 player.frame = 0
 
             if player.current_lives == 0:
+
                 loser_screen()
                 run = False
 
@@ -245,6 +258,8 @@ def main():
 def loser_screen():
     run = True
     clock = pygame.time.Clock()
+    pygame.mixer.music.pause()
+    pygame.mixer.Sound.play(loser_sound)
 
     while run:
         clock.tick(60)
@@ -272,6 +287,8 @@ def loser_screen():
 def winner_screen():
     run = True
     clock = pygame.time.Clock()
+    pygame.mixer.music.pause()
+    pygame.mixer.Sound.play(winner_sound)
 
     while run:
         clock.tick(60)
@@ -299,14 +316,26 @@ def winner_screen():
 def menu_screen():
     run = True
     clock = pygame.time.Clock()
-
+    music_playing = True
+    pygame.mixer.music.play(-1)
     while run:
         clock.tick(60)
         win.fill(grey)
 
         font = pygame.font.SysFont("Agency FB", 120)
-        winner_text = font.render("DINO BRAWL", True, (0, 255, 0))
+        winner_text = font.render("DINO BRAWL", True, green)
         win.blit(winner_text, (400, 150))
+
+        font = pygame.font.SysFont("Agency FB", 30)
+        winner_text = font.render("Sound", True, black)
+        win.blit(winner_text, (120, 15))
+
+        if music_playing:
+            menu_buttons[2].box_color = red
+            menu_buttons[3].box_color = green
+        else:
+            menu_buttons[2].box_color = green
+            menu_buttons[3].box_color = red
 
         for button in menu_buttons:
             button.draw(win)
@@ -326,7 +355,12 @@ def menu_screen():
                             run = False
                         elif button.text == "Close Game":
                             sys.exit()
-
+                        elif button.text == "OFF":
+                            pygame.mixer.music.pause()
+                            music_playing = False
+                        elif button.text == "ON":
+                            pygame.mixer.music.unpause()
+                            music_playing = True
     main()
 
 
@@ -371,6 +405,8 @@ def select_character(player):
 
     last_update = pygame.time.get_ticks()
     frame = 0
+    action = 1
+
     while run:
 
         clock.tick(60)
@@ -421,10 +457,10 @@ def select_character(player):
         win.blit(vita_desc_attack, (1000, 500))
         win.blit(vita_desc_speed, (1000, 550))
 
-        win.blit(pygame.transform.scale(characters["Doux"][1][frame], (144, 144)), (105, 300))
-        win.blit(pygame.transform.scale(characters["Mort"][1][frame], (144, 144)), (405, 300))
-        win.blit(pygame.transform.scale(characters["Tard"][1][frame], (144, 144)), (705, 300))
-        win.blit(pygame.transform.scale(characters["Vita"][1][frame], (144, 144)), (1005, 300))
+        win.blit(pygame.transform.scale(characters["Doux"][action][frame], (144, 144)), (105, 300))
+        win.blit(pygame.transform.scale(characters["Mort"][action][frame], (144, 144)), (405, 300))
+        win.blit(pygame.transform.scale(characters["Tard"][action][frame], (144, 144)), (705, 300))
+        win.blit(pygame.transform.scale(characters["Vita"][action][frame], (144, 144)), (1005, 300))
 
         for button in character_selection_buttons:
             button.draw(win)

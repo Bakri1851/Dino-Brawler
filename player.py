@@ -2,6 +2,8 @@ import pygame
 import random
 import world
 
+respawn_points = [(400, 350), (800, 350), (50, 550), (1150, 550), (50, 200), (1150, 200)]
+
 
 class Player():
     def __init__(self, x, y, width, height, health_x, health_y, lives_x, lives_y, direction):
@@ -13,6 +15,10 @@ class Player():
 
         self.x = x
         self.y = y
+
+        self.respawn_point_x = 0
+        self.respawn_point_y = 0
+
         self.width = width
         self.height = height
         self.rect = pygame.Rect(x, y, width, height)
@@ -165,10 +171,14 @@ class Player():
         if player.current_health <= 0:
             player.reduce_lives(1)
             player.get_health(player.maximum_health)
+            where_to_respawn = random.choice(respawn_points)
+            self.x = where_to_respawn[0]
+            self.y = where_to_respawn[1]
 
         if player2.current_health <= 0:
             player2.reduce_lives(1)
             player2.get_health(player2.maximum_health)
+
 
     def update(self, player2, win):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
