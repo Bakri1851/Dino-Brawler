@@ -143,11 +143,14 @@ def main():
             vote_on_map(player)
 
         if player.has_voted_on_map and player2.has_voted_on_map and not taken_down_map:
-            if player.decided_map == "Map 1":
+            if player.chosen_map == "Map 1" and player2.chosen_map == "Map 1":
                 world = World(map1)
-            else:
+                taken_down_map = True
+            elif player.chosen_map == "Map 2" and player2.chosen_map == "Map 2":
                 world = World(map2)
-            taken_down_map = True
+                taken_down_map = True
+            else:
+                player.map_decider(player2)
 
         player.tried_to_light_attack_this_frame = False
         player.tried_to_heavy_attack_this_frame = False
@@ -226,7 +229,7 @@ def main():
                 winner_screen()
                 run = False
 
-        if player.has_voted_on_map and player2.has_voted_on_map:
+        if player.has_voted_on_map and player2.has_voted_on_map and taken_down_map:
             player.move(win, player2, world)
             player.live_check(player, player2)
 
