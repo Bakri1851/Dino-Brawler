@@ -20,7 +20,7 @@ class Network:
         except:  # this will send information straight away
             pass
 
-    def recieve(self, data):
+    def receive(self, data):
         try:
             self.client.send(pickle.dumps(data))
             return pickle.loads(self.client.recv(2048))

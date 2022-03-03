@@ -123,7 +123,7 @@ def main():
     while run:
         clock.tick(60)
         try:
-            player2 = network.recieve(player)
+            player2 = network.receive(player)
         except:
             run = False
             print("Couldn't get game")
