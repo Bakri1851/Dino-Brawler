@@ -1,4 +1,3 @@
-import socket
 import sys
 import pygame
 from network import Network  # this will import the network class from network file
@@ -83,30 +82,31 @@ map_buttons = (Button("Map 1", 280, 550, white, red),
 play_again_button = Button("Main menu", 525, 550, white, red)
 
 
-def update_screen(win, player, player2, chosen_animation_list, chosen_animation_list2, world):
-    win.fill(grey)
+def update_screen(screen, player, player2, chosen_animation_list, chosen_animation_list2, world):
+    screen.fill(grey)
 
-    if player.ready == True and player2.ready == True:
+    if player.ready and player2.ready:
 
         # draws my tiles onto the screen
         world.draw()
 
         # draw the character onto screen
-        win.blit(chosen_animation_list[player.action][player.frame], (player.x - 10, player.y - 10))
-        win.blit(chosen_animation_list2[player2.action][player2.frame], (player2.x - 10, player2.y - 10))
+        screen.blit(chosen_animation_list[player.action][player.frame], (player.x - 10, player.y - 10))
+        screen.blit(chosen_animation_list2[player2.action][player2.frame], (player2.x - 10, player2.y - 10))
 
         # draw player health and live bars on screen
         font = pygame.font.SysFont("Agency FB", 80)
         text = font.render("P1", True, red)
-        win.blit(text, (25, 700))
+        screen.blit(text, (25, 700))
         text = font.render("P2", True, red)
-        win.blit(text, (825, 700))
-        player.update(player2, win)
+        screen.blit(text, (825, 700))
+        player.update(player2, screen)
 
     else:
+        # if the opposing player isn't ready this screen appears
         font = pygame.font.SysFont("Agency FB", 80)
         text = font.render("Waiting for Player...", True, red)
-        win.blit(text, (width / 2 - text.get_width() / 2, height / 2 - text.get_height() / 2))
+        screen.blit(text, (width / 2 - text.get_width() / 2, height / 2 - text.get_height() / 2))
 
     pygame.display.update()
 
