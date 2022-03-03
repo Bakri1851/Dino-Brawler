@@ -2,7 +2,7 @@ import socket
 import sys
 import pygame
 from network import Network  # this will import the network class from network file
-from world import World, map1, map2, empty_map
+from world import World, maps, empty_map
 from characters import characters
 
 pygame.font.init()
@@ -18,6 +18,12 @@ characters = {
     "Tard": characters[2],
     "Vita": characters[3],
 }
+
+maps = {
+    "Map 1": maps[0],
+    "Map 2": maps[1],
+}
+
 
 map1_image = pygame.image.load('Map Assets/Map Screenshots/Map 1.png').convert_alpha()
 map2_image = pygame.image.load('Map Assets/Map Screenshots/Map 2.png').convert_alpha()
@@ -144,10 +150,10 @@ def main():
 
         if player.has_voted_on_map and player2.has_voted_on_map and not taken_down_map:
             if player.chosen_map == "Map 1" and player2.chosen_map == "Map 1":
-                world = World(map1)
+                world = World(maps["Map 1"])
                 taken_down_map = True
             elif player.chosen_map == "Map 2" and player2.chosen_map == "Map 2":
-                world = World(map2)
+                world = World(maps["Map 2"])
                 taken_down_map = True
             else:
                 player.map_decider(player2)
