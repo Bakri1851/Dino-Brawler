@@ -44,6 +44,7 @@ class World():
         for tile in self.tile_list:
             win.blit(tile[0], tile[1])
 
+# map design
 
 map1 = [
 

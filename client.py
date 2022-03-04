@@ -12,6 +12,7 @@ height = 800  # height of window
 win = pygame.display.set_mode((width, height))  # Size of window
 pygame.display.set_caption("Dino Brawler")  # Cilent Name
 
+# Dictionaries in client as pngs cannot be pickled
 characters = {
     "Doux": characters[0],
     "Mort": characters[1],
@@ -23,7 +24,7 @@ maps = {
     "Map 1": maps[0],
     "Map 2": maps[1],
 }
-
+# Load in and scale map images
 map1_image = pygame.image.load('Map Assets/Map Screenshots/Map 1.png').convert_alpha()
 map2_image = pygame.image.load('Map Assets/Map Screenshots/Map 2.png').convert_alpha()
 
@@ -32,12 +33,14 @@ map2_image = pygame.transform.scale(map2_image, (500, 280))
 
 animation_cooldown = 100
 
+# Load in sound files
 attack_sound = pygame.mixer.Sound('Sounds/Attack sound effect.wav')
 jump_sound = pygame.mixer.Sound('Sounds/Jump sound effect.wav')
 winner_sound = pygame.mixer.Sound('Sounds/Winner Music.wav')
 loser_sound = pygame.mixer.Sound('Sounds/Loser Music.wav')
 pygame.mixer.music.load('Sounds/Game bgm.wav')
 
+# colors to reduce coding the values
 black = (0, 0, 0)
 grey = (128, 128, 128)
 white = (255, 255, 255)
@@ -47,6 +50,8 @@ red = (255, 0, 0)
 yellow = (255, 174, 0)
 green = (182, 255, 0)
 
+
+# Button class to access different parts of the game
 
 class Button:
     def __init__(self, text, x, y, box_color, text_color, width, height):
@@ -91,6 +96,7 @@ map_buttons = (Button("Map 1", 280, 550, white, red, 150, 100),
 play_again_button = Button("Main menu", 525, 550, white, red, 150, 100)
 
 
+# Routine to blit things on screen every frame
 def update_screen(screen, player, player2, chosen_animation_list, chosen_animation_list2, world):
     screen.fill(grey)
 
@@ -99,7 +105,7 @@ def update_screen(screen, player, player2, chosen_animation_list, chosen_animati
         # draws my tiles onto the screen
         world.draw()
 
-        # draw the character onto screen
+        # draw the players onto screen
         screen.blit(chosen_animation_list[player.action][player.frame], (player.x - 10, player.y - 10))
         screen.blit(chosen_animation_list2[player2.action][player2.frame], (player2.x - 10, player2.y - 10))
 
@@ -122,18 +128,19 @@ def update_screen(screen, player, player2, chosen_animation_list, chosen_animati
 
 
 def main():
-    world = World(empty_map)
+    world = World(empty_map)  # Placeholder until map is chosen
 
     run = True  # initiates while loop
     clock = pygame.time.Clock()
 
     network = Network()
-    player = network.get_player()
+    player = network.get_player()  # get player class from server
 
+    # variables for character animation
     player.action = 0
     player.frame = 0
     last_update = pygame.time.get_ticks()
-
+    # lists for what characters they choose to use
     chosen_animation_list = []
     chosen_animation_list2 = []
 
@@ -142,12 +149,13 @@ def main():
     while run:
         clock.tick(60)
         try:
-            player2 = network.receive(player)
+            player2 = network.receive(player)  # Recieve data from other player
         except:
             run = False
             print("Couldn't get game")
             break
         player.ready = True
+        # Conditions for setting up the game
         if player.ready and not player.selected_char:
             select_character(player)
             chosen_animation_list = characters[player.chosen_char]
@@ -164,7 +172,7 @@ def main():
                 taken_down_map = True
             else:
                 player.map_decider(player2)
-
+        # To prevent attacking with holding keys
         player.tried_to_light_attack_this_frame = False
         player.tried_to_heavy_attack_this_frame = False
 
@@ -181,7 +189,7 @@ def main():
                 run = False
 
                 pygame.quit()
-
+            # Handle animations and sounds
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
                     player.action = 1
@@ -227,7 +235,7 @@ def main():
                         player.action = 14
 
                     player.frame = 0
-
+            # Idle animation if no animation  is used
             if event.type == pygame.KEYUP:
 
                 if player.direction == "RIGHT":
@@ -237,7 +245,7 @@ def main():
                     player.action = 9
 
                 player.frame = 0
-
+            # To check if players have won or lost and end game
             if player.current_lives == 0:
                 loser_screen()
                 run = False
@@ -245,14 +253,15 @@ def main():
             if player2.current_lives == 0:
                 winner_screen()
                 run = False
-
+        # Don't let players move until game is set up
         if player.has_voted_on_map and player2.has_voted_on_map and taken_down_map:
             player.move(win, player2, world)
             player.live_check(player, player2)
-
+        # Routine to draw screen
         update_screen(win, player, player2, chosen_animation_list, chosen_animation_list2, world)
 
 
+# display loser screen
 def loser_screen():
     run = True
     clock = pygame.time.Clock()
@@ -282,6 +291,7 @@ def loser_screen():
                     run = False
 
 
+# display winner screen
 def winner_screen():
     run = True
     clock = pygame.time.Clock()
@@ -311,6 +321,7 @@ def winner_screen():
                     run = False
 
 
+# screen when players first join game
 def menu_screen():
     run = True
     clock = pygame.time.Clock()
@@ -362,6 +373,7 @@ def menu_screen():
     main()
 
 
+# routine to lock in vote
 def vote_on_map(player):
     run = True
     clock = pygame.time.Clock()
@@ -397,6 +409,7 @@ def vote_on_map(player):
                         run = False
 
 
+# routine to lock in character
 def select_character(player):
     run = True
     clock = pygame.time.Clock()

@@ -3,6 +3,7 @@ import spritesheet
 
 black = (0, 0, 0)
 
+# load and store spritesheets and images whilst also applying class
 sprite_sheet_image_doux = pygame.image.load('Characters/doux.png').convert_alpha()
 sprite_sheet_image_doux2 = pygame.image.load('Characters/doux2.png').convert_alpha()
 sprite_sheet_doux = spritesheet.SpriteSheet(sprite_sheet_image_doux)
@@ -29,10 +30,12 @@ animation_list_mort = []
 animation_list_tard = []
 animation_list_vita = []
 
+# how many frames per action
 animation_steps = [4, 6, 3, 4, 7]
 animation_steps2 = [4, 4, 4, 11]
 
 
+# to get animations for both directions
 def get_character_animations_right(sprite_sheet, animation_list, animation_steps):
     step_counter = 0
     for animation in animation_steps:
@@ -55,6 +58,8 @@ def get_character_animations_left(sprite_sheet, animation_list, animation_steps)
         animation_list.append(temp_img_list)
 
 
+# get all animations
+
 get_character_animations_right(sprite_sheet_doux, animation_list_doux, animation_steps)
 get_character_animations_right(sprite_sheet_doux2, animation_list_doux, animation_steps2)
 get_character_animations_left(sprite_sheet_doux, animation_list_doux, animation_steps)
@@ -76,4 +81,3 @@ get_character_animations_left(sprite_sheet_vita, animation_list_vita, animation_
 get_character_animations_left(sprite_sheet_vita2, animation_list_vita, animation_steps2)
 
 characters = [animation_list_doux, animation_list_mort, animation_list_tard, animation_list_vita]
-

@@ -43,7 +43,7 @@ class Player():
 
         self.speed = 5
 
-        self.keys = pygame.key.get_pressed()
+        keys = pygame.key.get_pressed()
 
         self.action = 0
         self.frame = 0
@@ -53,6 +53,7 @@ class Player():
         self.chosen_char = None
         self.chosen_map = None
 
+    # routine to choose char
     def choose_character(self, chosen_char):
         self.chosen_char = chosen_char
         if chosen_char == "Doux":
@@ -84,15 +85,18 @@ class Player():
             self.speed = 4
         self.health_ratio = self.maximum_health / self.health_bar_length
 
+    # if vote isn't won itll be ranomised
     def map_decider(self, player2):
         self.chosen_map = random.choice([self.chosen_map, player2.chosen_map])
 
+    # take damage if needed
     def get_damage(self, amount):
         if self.current_health > 0:
             self.current_health -= amount
         if self.current_health <= 0:
             self.current_health = 0
 
+    # replenish health once lost a live
     def get_health(self, amount):
         if self.current_health < self.maximum_health:
             self.current_health += amount
@@ -102,6 +106,7 @@ class Player():
     def reduce_lives(self, amount):
         self.current_lives -= amount
 
+    # routines to show player how much health and lives they have got remaining
     def display_health(self, win):
         pygame.draw.rect(win, (255, 0, 0), (self.health_x, self.health_y, self.current_health / self.health_ratio, 15))
         pygame.draw.rect(win, (0, 0, 0), (self.health_x, self.health_y, self.health_bar_length, 15), 5)
@@ -120,19 +125,20 @@ class Player():
         dy = 0
 
         # get key presses
-        self.keys = pygame.key.get_pressed()
+        keys = pygame.key.get_pressed()
 
-        if self.keys[pygame.K_a] or self.keys[pygame.K_LEFT]:
+        # move character around
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             dx -= self.speed
 
-        if self.keys[pygame.K_d] or self.keys[pygame.K_RIGHT]:
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             dx += self.speed
 
-        if (self.keys[pygame.K_w] or self.keys[pygame.K_UP]) and self.jumped == False and self.in_air == False:
+        if (keys[pygame.K_w] or keys[pygame.K_UP]) and self.jumped == False and self.in_air == False:
             self.vel_y = -15
             self.jumped = True
 
-        if not (self.keys[pygame.K_w] or self.keys[pygame.K_UP]):
+        if not (keys[pygame.K_w] or keys[pygame.K_UP]):
             self.jumped = False
         # this is the gravity
         self.vel_y += 1
@@ -165,7 +171,7 @@ class Player():
         self.update(player2, win)
 
     def live_check(self, player, player2):
-
+        # Respawn player once they have lost a life
         if player.current_health <= 0:
             player.reduce_lives(1)
             player.get_health(player.maximum_health)
@@ -179,16 +185,15 @@ class Player():
 
     def update(self, player2, win):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-
+        # display health and live bars of players
         self.display_health(win)
         self.display_lives(win)
         player2.display_health(win)
         player2.display_lives(win)
 
+        # check for if other player has attacked so damage can be dealt
         if player2.tried_to_light_attack_this_frame == True and self.rect.colliderect(player2.rect):
             self.get_damage(player2.attack_light)
-
-        player2.tried_to_light_attack_this_frame = False
 
         if player2.tried_to_heavy_attack_this_frame == True and self.rect.colliderect(player2.rect):
             self.get_damage(player2.attack_heavy)

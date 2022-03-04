@@ -7,4 +7,4 @@ class Game():
         player2 = Player(800, 350, 48, 48, 900, 725, 900, 755, "LEFT")
         players = [player1, player2]
         self.players = players
-        self.id = id
+        self.id = id  # Store id to help direct players to their games

@@ -37,6 +37,7 @@ def threaded_client(my_connection, player, game_id):  # conn = connection
                 if not data:
                     break
                 else:
+                    # send data to each player
                     if player == 1:
                         reply = games[game_id].players[0]
                     else:
