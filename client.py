@@ -2,7 +2,7 @@ import sys
 import pygame
 from network import Network  # this will import the network class from network file
 from world import World, maps, empty_map
-from characters import characters
+from sprites import characters
 
 pygame.font.init()
 pygame.mixer.init()
