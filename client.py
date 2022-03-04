@@ -51,7 +51,7 @@ green = (182, 255, 0)
 class Button:
     def __init__(self, text, x, y, box_color, text_color, width, height):
         self.text = text
-        self.text_size = height/2.5
+        self.text_size = height / 2.5
         self.x = x
         self.y = y
         self.box_color = box_color
@@ -79,7 +79,6 @@ menu_buttons = (Button("Play Game", 525, 350, white, red, 150, 100),
                 Button("Close Game", 525, 500, white, red, 150, 100),
                 Button("OFF", 150, 50, green, black, 100, 50),
                 Button("ON", 50, 50, red, black, 100, 50))
-
 
 character_selection_buttons = (Button("Doux", 100, 200, blue, black, 150, 100),
                                Button("Mort", 400, 200, red, black, 150, 100),
@@ -240,7 +239,6 @@ def main():
                 player.frame = 0
 
             if player.current_lives == 0:
-
                 loser_screen()
                 run = False
 

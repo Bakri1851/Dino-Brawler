@@ -1,5 +1,4 @@
 import pygame
-import random
 
 width = 1250  # width of window
 height = 800  # height of window

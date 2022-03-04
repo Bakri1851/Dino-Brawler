@@ -16,9 +16,6 @@ class Player():
         self.x = x
         self.y = y
 
-        self.respawn_point_x = 0
-        self.respawn_point_y = 0
-
         self.width = width
         self.height = height
         self.rect = pygame.Rect(x, y, width, height)
@@ -124,6 +121,7 @@ class Player():
 
         # get key presses
         self.keys = pygame.key.get_pressed()
+
         if self.keys[pygame.K_a] or self.keys[pygame.K_LEFT]:
             dx -= self.speed
 
@@ -178,7 +176,6 @@ class Player():
         if player2.current_health <= 0:
             player2.reduce_lives(1)
             player2.get_health(player2.maximum_health)
-
 
     def update(self, player2, win):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
